@@ -1,3 +1,5 @@
+#pragma once
+
 #include "common.h"
 
 void perform_random_access_procedure();
