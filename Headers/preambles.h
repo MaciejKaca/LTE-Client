@@ -3,7 +3,7 @@
 
 typedef struct UE_ID_Type
 {
-	int ra_rnti;	
+	int ra_rnti;
 } UE_ID_Type;
 
 typedef struct Sequence

@@ -14,6 +14,7 @@ int client_socket;
 
 int main(int argc, char *argv[])
 {
+	srand((unsigned)time(NULL));
 	if (argc < 3)
 		error("Not enough arguments passed!");
 
