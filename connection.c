@@ -1,12 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h> 
-#include <string.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netdb.h>
-#include <unistd.h>
-
 #include "Headers/connection.h"
 
 void create_session(char *server_addres, int port)
@@ -19,7 +10,7 @@ void create_socket()
 {
 	client_socket = socket(AF_INET, SOCK_STREAM, 0);
 	if (client_socket < 0)
-		error("ERROR opening socket");
+		error("Can't open socket!");
 }
 
 void connect_to_server(char *server_addres, int port)
@@ -29,10 +20,7 @@ void connect_to_server(char *server_addres, int port)
 
 	server = gethostbyname(server_addres);
 	if (server == NULL) 
-	{
-		fprintf(stderr, "ERROR, no such host!\n");
-		exit(0);
-	}
+		error("No such host!");
 
 	bzero((char *) &serv_addr, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
@@ -42,6 +30,4 @@ void connect_to_server(char *server_addres, int port)
 
     if (connect(client_socket, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) 
         error("Connection failed!");   
-	
-
 }
