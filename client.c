@@ -4,12 +4,6 @@
 #include "Headers/lte_attach.h"
 #include "Headers/connection.h"
 
-void error(char *msg)
-{
-	perror(msg);
-	exit(0);
-}
-
 int client_socket;
 
 int main(int argc, char *argv[])
