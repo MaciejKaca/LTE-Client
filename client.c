@@ -1,3 +1,7 @@
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h> 
+
 #include "Headers/preambles.h"
 #include "Headers/lte_attach.h"
 #include "Headers/connection.h"
@@ -24,7 +28,7 @@ int main(int argc, char *argv[])
 	
 	struct RandomAccessPreamble rap;
 	rap.cyclic_prefix='z';
-	write(client_socket,rap,sizeof(rap));
+	write(client_socket,(void*)&rap,sizeof(rap));
 	lte_attach();
 
 	return 0;
