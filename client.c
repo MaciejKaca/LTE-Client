@@ -1,10 +1,11 @@
-#include "preambles.h"
-
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
+
+#include "preambles.h"
+#include "lte_attach.h"
 
 void error(char *msg)
 {
@@ -43,11 +44,6 @@ void connect_to_server(int *arguments[])
 
 	if (connect(sockfd, &serv_addr, sizeof(serv_addr)) < 0)
 		error("Connection failed!");
-}
-
-void lte_attach()
-{
-	perform_random_access_procedure();
 }
 
 int main(int argc, char *argv[])
