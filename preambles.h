@@ -8,7 +8,7 @@ struct UE_ID_Type
 
 struct Sequence
 {
-	char[15] ue_id_value; // IMEI
+	char ue_id_value[15]; // IMEI
 	struct UE_ID_Type ue_id_type;
 };
 
