@@ -1,6 +1,7 @@
 #pragma once
 
 #include "common.h"
+#include "preambles.h"
 
 RandomAccessPreamble create_input_preamble();
 

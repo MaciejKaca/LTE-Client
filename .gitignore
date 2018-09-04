@@ -5,3 +5,8 @@
 /.vs
 .vscode/settings.json
 a.out
+client.o
+connection.o
+error.o
+lte_attach.o
+lte_client

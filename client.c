@@ -18,5 +18,6 @@ int main(int argc, char *argv[])
 	create_session(server_address, port);
 	lte_attach();
 
+	close(client_socket);
 	return 0;
 }
