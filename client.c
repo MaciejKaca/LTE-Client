@@ -1,6 +1,6 @@
-#include "preambles.h"
-#include "lte_attach.h"
-#include "connection.h"
+#include "Headers/preambles.h"
+#include "Headers/lte_attach.h"
+#include "Headers/connection.h"
 
 void error(char *msg)
 {
@@ -17,7 +17,14 @@ int main(int argc, char *argv[])
 		exit(0);
 	}
 
-	create_session(argv);
+	char *server_address = argv[1];
+	int port = atoi(argv[2]);
+
+	create_session(server_address, port);
+	
+	struct RandomAccessPreamble rap;
+	rap.cyclic_prefix='z';
+	write(client_socket,rap,sizeof(rap));
 	lte_attach();
 
 	return 0;
