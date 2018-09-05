@@ -1,5 +1,6 @@
 #pragma once
 
-#include <stdio.h>
+#include "common.h"
+#include <errno.h>
 
 void error(char *msg);

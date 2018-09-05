@@ -2,6 +2,7 @@
 
 void error(char *msg)
 {
+	errno = ECANCELED;
 	perror(msg);
-	exit(0);
+	exit(EXIT_FAILURE);
 }
