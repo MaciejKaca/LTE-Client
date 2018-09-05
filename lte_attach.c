@@ -16,7 +16,7 @@ RandomAccessPreamble create_input_preamble()
     return rap;
 }
 
-bool validate_preamble(RandomAccessPreamble rap, RRC_ConnectionRequest output_preamble)
+bool validate_preamble(RandomAccessPreamble rap, RandomAccessResponse output_preamble)
 {
     return rap.sequence.ue_id_type.ra_rnti == output_preamble.sequence.ue_id_type.ra_rnti;
 }
@@ -28,7 +28,7 @@ void perform_random_access_procedure()
     if (result < 0)
         error("Couldn't write preamble to server.");
 
-    RRC_ConnectionRequest output_preamble;
+    RandomAccessResponse output_preamble;
     read(client_socket, &output_preamble, sizeof(output_preamble));
 
     result = validate_preamble(rap, output_preamble);

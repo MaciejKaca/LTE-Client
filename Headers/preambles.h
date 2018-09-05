@@ -19,7 +19,7 @@ typedef struct RandomAccessPreamble
 	Sequence sequence;
 } RandomAccessPreamble;
 
-typedef struct RRC_ConnectionRequest
+typedef struct RandomAccessResponse
 {
 	Sequence sequence;
 	int timing_advance_value;
@@ -37,4 +37,3 @@ typedef struct S_TMSI
 	int8_t MMEC; // MME Code
 	int32_t M_TMSI; // MME Mobile Subscriber Identity
 } S_TMSI;
-
