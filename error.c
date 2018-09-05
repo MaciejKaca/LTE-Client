@@ -1,6 +1,6 @@
 #include "Headers/error.h"
 
-extern client_socket;
+extern int client_socket;
 
 void error(char *msg)
 {
