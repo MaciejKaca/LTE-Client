@@ -1,8 +1,6 @@
 #pragma once
 #include <stdint.h>
 
-#include "sequence.h"
-
 // Serving Temporary Mobile Subscriber Identity
 /*
 	First attach to network - UE sends IMSI.
