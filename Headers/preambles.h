@@ -23,4 +23,4 @@ typedef struct RandomAccessResponse
 	int timing_advance_value;
 	bool uplink_resource_grant;
 	int temp_c_rnti; // Temporary ID assigned for this session to the UE
-} RRC_ConnectionRequest;
+} RandomAccessResponse;

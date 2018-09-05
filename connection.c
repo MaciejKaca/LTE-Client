@@ -25,9 +25,11 @@ void connect_to_server(char *server_addres, int port)
 	bzero((char *)&serv_addr, sizeof(serv_addr));
 	serv_addr.sin_family = AF_INET;
 
-	bcopy((char *)server->h_addr_list[0], (char *)&serv_addr.sin_addr.s_addr, server->h_length);
+	bcopy((char *)server->h_addr_list[0], (char *)&serv_addr.sin_addr.s_addr,
+		  server->h_length);
 	serv_addr.sin_port = htons(port);
 
-	if (connect(client_socket, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
+	if (connect(client_socket, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) <
+		0)
 		error("Connection failed!");
 }

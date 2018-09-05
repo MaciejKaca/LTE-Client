@@ -16,9 +16,11 @@ RandomAccessPreamble create_input_preamble()
     return rap;
 }
 
-bool validate_preamble(RandomAccessPreamble rap, RandomAccessResponse output_preamble)
+bool validate_preamble(RandomAccessPreamble rap,
+                       RandomAccessResponse output_preamble)
 {
-    return rap.sequence.ue_id_type.ra_rnti == output_preamble.sequence.ue_id_type.ra_rnti;
+    return rap.sequence.ue_id_type.ra_rnti ==
+           output_preamble.sequence.ue_id_type.ra_rnti;
 }
 
 void perform_random_access_procedure()
@@ -38,7 +40,4 @@ void perform_random_access_procedure()
     printf("Attach succeded. Your temp ID:%d", output_preamble.temp_c_rnti);
 }
 
-void lte_attach()
-{
-    perform_random_access_procedure();
-}
+void lte_attach() { perform_random_access_procedure(); }
