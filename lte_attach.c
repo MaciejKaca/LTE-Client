@@ -30,12 +30,12 @@ void perform_random_access_procedure()
 
     RRC_ConnectionRequest output_preamble;
     read(client_socket, &output_preamble, sizeof(output_preamble));
-    printf("DASDAS");
-    printf("dasdasdas%d", output_preamble.temp_c_rnti);
 
     result = validate_preamble(rap, output_preamble);
     if (result == false)
         error("Preambles do not match.");
+
+    printf("Attach succeded. Your temp ID:%d", output_preamble.temp_c_rnti);
 }
 
 void lte_attach()
