@@ -1,5 +1,5 @@
 CC = gcc
-CC_FLAGS = -gw
+CC_FLAGS = -g
 
 SOURCES = $(wildcard *.c)
 OBJECTS = $(SOURCES:.c=.o)
@@ -7,9 +7,8 @@ EXEC = lte_client
 
 $(EXEC): $(OBJECTS)
 	$(CC) $(OBJECTS) -o $(EXEC)
+	rm -f *.o *~
 
-%.o: %.cpp
+%.o: %.c
 	$(CC) -c $(CC_FLAGS) $< -o $@
 
-clean:
-	rm -f $(EXEC) $(OBJECTS)
