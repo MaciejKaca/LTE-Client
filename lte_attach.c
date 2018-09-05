@@ -37,7 +37,7 @@ void perform_random_access_procedure()
     if (result == false)
         error("Preambles do not match.");
 
-    printf("Attach succeded. Your temp ID:%d", output_preamble.temp_c_rnti);
+    printf("Attach succeded. Your temp ID: %d", output_preamble.temp_c_rnti);
 }
 
 void lte_attach() { perform_random_access_procedure(); }
