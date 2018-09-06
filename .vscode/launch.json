@@ -8,10 +8,10 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/a.out",
+            "program": "${workspaceFolder}/lte_client",
             "args": [
                 "localhost",
-                "4000"
+                "2222"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

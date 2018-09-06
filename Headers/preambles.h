@@ -3,7 +3,7 @@
 
 typedef struct Sequence
 {
-	char *type;
+	char type[8];
 	int ra_rnti;
 } Sequence;
 
