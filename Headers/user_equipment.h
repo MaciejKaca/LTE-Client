@@ -11,7 +11,7 @@ typedef struct UserEquipment
   char imsi[16]; // International Mobile Subscriber Identity
   char plmn[8];
 
-  Baterry baterry;
+  Battery battery;
 } UserEquipment;
 
 void create_user_equipment_imsi();
