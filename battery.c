@@ -10,14 +10,14 @@ void *battery_drain()
     while (true)
     {
         user_equipment.battery.charge -= 1;
-        printf("battery: %d%%\n", user_equipment.battery.charge);
+        printf("Battery: %d%%\n", user_equipment.battery.charge);
         sleep(2);
     }
 }
 
 void *battery_drain_start()
 {
-    pthread_t battery_drain_thread, test;
+    pthread_t battery_drain_thread;
     pthread_create(&battery_drain_thread, NULL, battery_drain, NULL);
     pthread_join(battery_drain_thread, NULL);
 }
