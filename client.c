@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
 
 	lte_attach();
 
-	user_equipment.baterry.baterry_drain_start();
+	user_equipment.baterry.baterry_drain_start(1,1);
 
 	close(client_socket);
 	return 0;
