@@ -7,7 +7,7 @@
 #include <pthread.h>
 
 int client_socket;
-extern UserEquipment user_equipment;
+UserEquipment user_equipment;
 
 int main(int argc, char *argv[])
 {

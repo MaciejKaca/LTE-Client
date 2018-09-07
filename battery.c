@@ -15,20 +15,10 @@ void *battery_drain()
     }
 }
 
-void *test1()
-{
-    while (true)
-    {
-        printf("tEST");
-        sleep(3);
-    }
-}
-
 void *battery_drain_start()
 {
     pthread_t battery_drain_thread, test;
     pthread_create(&battery_drain_thread, NULL, battery_drain, NULL);
-    pthread_create(&test, NULL, test1, NULL);
     pthread_join(battery_drain_thread, NULL);
 }
 

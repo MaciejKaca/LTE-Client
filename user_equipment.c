@@ -1,7 +1,7 @@
 #include "Headers/user_equipment.h"
 #include <unistd.h>
 
-UserEquipment user_equipment;
+extern UserEquipment user_equipment;
 
 void create_user_equipment_imsi()
 {
