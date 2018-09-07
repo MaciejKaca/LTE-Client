@@ -1,4 +1,5 @@
 #include "Headers/user_equipment.h"
+#include <unistd.h>
 
 UserEquipment user_equipment;
 
@@ -23,4 +24,6 @@ UserEquipment create_user_equipment()
 
     create_user_equipment_plmn();
     create_user_equipment_imsi();
+
+    create_battery();
 }
