@@ -17,9 +17,9 @@ void *battery_drain(BatteryArgs *arguments)
     int battery_dain_value = arguments->battery_drain_value;
     while (true)
     {
-        user_equipment.baterry.charge -= battery_dain_value;
+        user_equipment.battery.charge -= battery_dain_value;
         sleep(delay);
-        printf("Battery_drain\n");
+        printf("Battery: %d%%\n", user_equipment.battery.charge);
     }
 }
 
