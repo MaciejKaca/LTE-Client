@@ -2,9 +2,12 @@
 
 #include "Headers/connection.h"
 #include "Headers/lte_attach.h"
+#include "Headers/user_equipment.h"
 #include "Headers/preambles.h"
+#include <pthread.h>
 
 int client_socket;
+UserEquipment user_equipment;
 
 int main(int argc, char *argv[])
 {
@@ -15,8 +18,12 @@ int main(int argc, char *argv[])
 	char *server_address = argv[1];
 	int port = atoi(argv[2]);
 
+	create_user_equipment();
 	create_session(server_address, port);
+
 	lte_attach();
+
+	user_equipment.battery.battery_drain_start(1, 1);
 
 	close(client_socket);
 	return 0;
