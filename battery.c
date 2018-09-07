@@ -34,9 +34,14 @@ void *battery_drain_start(int battery_drain_value, int delay)
     pthread_join(battery_drain_thread, NULL);
 }
 
+bool *is_battery_charged()
+{
+    return user_equipment.battery.charge > 0;
+}
+
 void create_battery()
 {
-    user_equipment.baterry.charge = 100;
-    user_equipment.baterry.battery_drain = battery_drain;
-    user_equipment.baterry.baterry_drain_start = battery_drain_start;
+    user_equipment.battery.charge = 100;
+    user_equipment.battery.battery_drain = battery_drain;
+    user_equipment.battery.battery_drain_start = battery_drain_start;
 }

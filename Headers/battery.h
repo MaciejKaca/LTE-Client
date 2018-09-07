@@ -2,15 +2,12 @@
 
 #include "common.h"
 
-typedef struct Baterry
+typedef struct Battery
 {
     int charge;
     void (*battery_drain)(int, int);
-    void (*baterry_drain_start)(int, int);
-    // TODO:
-    //      - implement thread that regulary drains baterry
-    //      - implement function that drains baterry by certain amount when called
-    //      - eat flan
-} Baterry;
+    void (*battery_drain_start)(int, int);
+    bool (*is_battery_charged)();
+} Battery;
 
 void create_battery();

@@ -7,7 +7,7 @@
 #include <pthread.h>
 
 int client_socket;
-extern UserEquipment user_equipment;
+UserEquipment user_equipment;
 
 int main(int argc, char *argv[])
 {
@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
 
 	lte_attach();
 
-	user_equipment.baterry.baterry_drain_start(1,1);
+	user_equipment.battery.battery_drain_start(1, 1);
 
 	close(client_socket);
 	return 0;
