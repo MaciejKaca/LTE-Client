@@ -11,8 +11,8 @@ void battery_drain()
     while (user_equipment.battery.is_battery_drained() == false)
     {
         user_equipment.battery.charge -= 1;
+        sleep;
         printf("Battery: %d%%\n", user_equipment.battery.charge);
-        sleep(2);
     }
 
     printf("Battery drained. I hope you're proud of yourself.\n");
