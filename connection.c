@@ -33,3 +33,9 @@ void connect_to_server(char *server_addres, int port)
 		0)
 		error("Connection failed!");
 }
+
+void set_socket_non_blocking(int socket)
+{
+	int flags = fcntl(socket, F_GETFL, 0);
+	fcntl(socket, F_SETFL, flags | O_NONBLOCK);
+}
