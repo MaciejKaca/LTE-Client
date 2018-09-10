@@ -2,6 +2,7 @@
 #include "Headers/preambles.h"
 #include "Headers/rrc_connection.h"
 #include "Headers/user_equipment.h"
+#include "Headers/connection.h"
 
 #include <pthread.h>
 
@@ -36,6 +37,11 @@ void perform_random_access_procedure()
   printf("Started: Random Access Procedure\n");
 
   RandomAccessPreamble rap = create_input_preamble();
+  message_label rap_label =
+      {
+        message_type : msg_random_access_preamble,
+        message_length : sizeof(RandomAccessPreamble)
+      };
 
   printf("Sending: Random Access Preamble...\n");
   printf("---\n");
@@ -43,38 +49,21 @@ void perform_random_access_procedure()
   printf("%s: %d\n", rap.sequence.type, rap.sequence.ra_rnti);
   printf("---\n");
 
-  int result = write(client_socket, (void *)&rap, sizeof(rap));
+  send_data(client_socket, (void *)&rap, sizeof(rap), &rap_label);
 
-  if (result < 0)
-    error("Couldn't write preamble to the server.");
-  else
-    printf("Preamble sent successfully!\n\n");
+  RandomAccessResponse *output_preamble;
 
-  printf("Reading: Random Access Response...\n");
-
-  RandomAccessResponse output_preamble;
-  result = read(client_socket, &output_preamble, sizeof(output_preamble));
-
-  if (result < 0)
-    error("Couldn't read output preamble from the server.");
-  else
-    printf("Preamble response red successfully!\n");
-
-  result = validate_preamble(rap, output_preamble);
-  if (result == false)
-    error("Preambles do not match.\n");
-  else
-    printf("%s's match!\n\n", rap.sequence.type);
+  output_preamble = receive_data(client_socket);
 
   printf("Random Acces Procedure succeded! \n");
   printf("---\n");
-  printf("Timing Advance Value: %d\n", output_preamble.timing_advance_value);
+  printf("Timing Advance Value: %d\n", output_preamble->timing_advance_value);
   printf("Uplink Resource Grant: %d\n",
-         output_preamble.uplink_resource_grant);
-  printf("Your C-RNTI: %d\n", output_preamble.temp_c_rnti);
+         output_preamble->uplink_resource_grant);
+  printf("Your C-RNTI: %d\n", output_preamble->temp_c_rnti);
   printf("---\n");
 
-  C_RNTI = output_preamble.temp_c_rnti;
+  C_RNTI = output_preamble->temp_c_rnti;
 }
 
 RRC_Connection_Request create_rrc_c_request()
@@ -105,37 +94,32 @@ void rrc_connection_setup()
   printf("Started: RRC Connection Setup\n");
 
   RRC_Connection_Request rrc_c_request = create_rrc_c_request();
+  message_label rrc_c_request_label =
+      {
+        message_type : msg_rrc_connection_request,
+        message_length : sizeof(RRC_Connection_Request)
+      };
 
-  int result =
-      write(client_socket, (void *)&rrc_c_request, sizeof(rrc_c_request));
-  if (result < 0)
-    error("Couldn't write rrc_c_request to server.");
-  else
-    printf("RRC Connection request send.\n");
+  send_data(client_socket, (void *)&rrc_c_request, sizeof(rrc_c_request), &rrc_c_request_label);
 
-  RRC_connection_Setup rrc_c_setup;
-  result = read(client_socket, (void *)&rrc_c_setup, sizeof(rrc_c_setup));
-  if (result < 0)
-    error("Couldn't read rrc_c_setup from server.");
-  else
-    printf("RRC Connection Setup received.\n");
+  RRC_connection_Setup *rrc_c_setup;
 
-  if (rrc_c_setup.c_rnti == C_RNTI)
-    printf("RRC Connection Setup is correct.\n");
+  rrc_c_setup = receive_data(socket);
 
-  printf("C-RNTI: %d\n", rrc_c_setup.c_rnti);
-  printf("PHR Config: %d\n", rrc_c_setup.phr_config.periodic_PHR_Timer);
-  printf("UPC Dedicated: %d\n", rrc_c_setup.UPC_Dedicatede.P0_UE_PUCCH);
+  printf("C-RNTI: %d\n", rrc_c_setup->c_rnti);
+  printf("PHR Config: %d\n", rrc_c_setup->phr_config.periodic_PHR_Timer);
+  printf("UPC Dedicated: %d\n", rrc_c_setup->UPC_Dedicatede.P0_UE_PUCCH);
 
   RRC_Connection_Setup_Complete rrc_c_setup_complete =
       create_rrc_c_setup_complete();
 
-  result = write(client_socket, (void *)&rrc_c_setup_complete,
-                 sizeof(rrc_c_setup_complete));
-  if (result < 0)
-    error("Couldn't write rrc_c_setup_complete to server.\n");
-  else
-    printf("RRC Connection Setup Complete send.\n");
+  message_label rrc_c_setup_complete_label =
+    {
+      message_type : msg_rrc_connection_setup,
+      message_length : sizeof(RRC_Connection_Setup_Complete)
+    };
+
+  send_data(client_socket, (void *)&rrc_c_setup_complete, sizeof(rrc_c_setup_complete), &rrc_c_request_label);
 
   printf("RRC Connection succeded.\n");
 }
@@ -144,17 +128,34 @@ void listen_to_server()
 {
   int result;
 
-  char buffer[256];
+  message_label label = {};
+
+  printf("%ld\n", sizeof(label));
+
   while (user_equipment.battery.is_battery_drained() == false)
   {
     printf("PING THREAD\n");
     if (user_equipment.battery.is_battery_critical() == true)
       printf("Battery is low!\n");
 
-    bzero(buffer, sizeof(buffer));
-    read(client_socket, (void *)&buffer, sizeof(buffer));
+    result = read(client_socket, (void *)&label, sizeof(message_label));
 
-    printf("Response: %s\n", buffer);
+    printf("%ld\n", result);
+
+    if (result == sizeof(message_label))
+    {
+      printf("Message received.\n");
+
+      switch (label.message_type)
+      {
+      case msg_ping_request:
+        break;
+      }
+    }
+    else if (result < sizeof(message_label))
+      printf("Wrong data received.\n");
+    else
+      printf("Can't read from the socket.\n");
 
     sleep(5);
   }

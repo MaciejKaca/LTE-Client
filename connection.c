@@ -1,4 +1,6 @@
 #include "Headers/connection.h"
+#include "Headers/preambles.h"
+#include "Headers/rrc_connection.h"
 
 void create_session(char *server_addres, int port)
 {
@@ -38,4 +40,75 @@ void set_socket_non_blocking(int socket)
 {
 	int flags = fcntl(socket, F_GETFL, 0);
 	fcntl(socket, F_SETFL, flags | O_NONBLOCK);
+}
+
+void send_data(int socket, void *data, int data_size, message_label *label)
+{
+	int result;
+	result = write(socket, (void *)label, sizeof(message_label));
+
+	if (result < 0)
+		error("Couldn't write to the socket.");
+	else
+		printf("Data sent successfully.\n");
+
+	result = write(socket, data, data_size);
+
+	if (result < 0)
+		error("Couldn't write to the socket.");
+	else
+		printf("Data sent successfully.\n");
+}
+
+char *read_data(int socket, int data_size)
+{
+	char *buffer = malloc(data_size);
+	bzero(buffer, data_size);
+	int result = read(socket, buffer, data_size);
+
+	if (result < 0)
+		error("Can't read from the socket.\n");
+
+	return buffer;
+}
+
+char *receive_data(int socket)
+{
+	message_label label;
+
+	int result = read(socket, (void *)&label, sizeof(label));
+
+	while(true)
+	{
+		if (result == sizeof(message_label))
+		{
+			switch (label.message_type)
+			{
+			case msg_random_access_response:
+				return read_data(socket, label.message_length);
+				break;
+			case msg_rrc_connection_setup:
+				return read_data(socket, label.message_length);
+				break;
+			case msg_ping_response:
+				return read_data(socket, label.message_length);
+				break;
+			default:
+				return "XDDDD\n";
+				break;
+			}
+			break;
+		}
+		else if (result < (int)sizeof(message_label))
+		{
+			printf("Wrong data received.\n");
+			continue;			
+		}
+		else
+		{
+			printf("Can't read from the socket.\n");
+			continue;
+		}
+	}
+		
 }
