@@ -4,32 +4,40 @@
 #include <pthread.h>
 
 extern UserEquipment user_equipment;
+extern threadpool thread_pool;
 
-void *battery_drain()
+void battery_drain()
 {
-    while (true)
+    while (user_equipment.battery.is_battery_drained() == false)
     {
         user_equipment.battery.charge -= 1;
         printf("Battery: %d%%\n", user_equipment.battery.charge);
         sleep(2);
     }
+
+    printf("Battery drained. I hope you're proud of yourself.\n");
 }
 
 void *battery_drain_start()
 {
-    pthread_t battery_drain_thread;
-    pthread_create(&battery_drain_thread, NULL, battery_drain, NULL);
-    pthread_join(battery_drain_thread, NULL);
+    thpool_add_work(thread_pool, (void *)battery_drain, NULL);
 }
 
-bool *is_battery_charged()
+bool *is_battery_critical()
 {
-    return user_equipment.battery.charge > 0;
+    return user_equipment.battery.charge < 30;
+}
+
+bool *is_battery_drained()
+{
+    return user_equipment.battery.charge == 0;
 }
 
 void create_battery()
 {
     user_equipment.battery.charge = 100;
-    user_equipment.battery.battery_drain = battery_drain;
+    user_equipment.battery.battery_drain = (void *)battery_drain;
     user_equipment.battery.battery_drain_start = battery_drain_start;
+    user_equipment.battery.is_battery_critical = is_battery_critical;
+    user_equipment.battery.is_battery_drained = is_battery_drained;
 }

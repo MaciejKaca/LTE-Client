@@ -7,6 +7,7 @@
 
 extern int client_socket;
 extern UserEquipment user_equipment;
+extern threadpool thread_pool;
 
 int C_RNTI;
 
@@ -139,15 +140,26 @@ void rrc_connection_setup()
   printf("RRC Connection succeded.\n");
 }
 
-void *listen_to_server()
+void listen_to_server()
 {
-  char buffer[5];
-  while (true)
+  int result;
+
+  char buffer[256];
+  while (user_equipment.battery.is_battery_drained() == false)
   {
+    printf("PING THREAD\n");
+    if (user_equipment.battery.is_battery_critical() == true)
+      printf("Battery is low!\n");
+
     bzero(buffer, sizeof(buffer));
     read(client_socket, (void *)&buffer, sizeof(buffer));
+
     printf("Response: %s\n", buffer);
+
+    sleep(5);
   }
+
+  printf("Listening stopped.\n");
 }
 
 // TODO: Create some kind of thread manager... :)
@@ -155,15 +167,12 @@ void start_server_listening_thread()
 {
   printf("Started: Listening\n");
 
-  pthread_t server_listening_thread;
-  pthread_create(&server_listening_thread, NULL, listen_to_server, NULL);
-  pthread_join(server_listening_thread, NULL);
+  thpool_add_work(thread_pool, (void *)listen_to_server, NULL);
 }
 
 void lte_attach()
 {
   perform_random_access_procedure();
   rrc_connection_setup();
-  printf("hey b0o0zs\n");
-  //start_server_listening_thread();
+  printf("\n");
 }

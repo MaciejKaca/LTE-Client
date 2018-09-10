@@ -8,6 +8,9 @@
 
 int client_socket;
 UserEquipment user_equipment;
+threadpool thread_pool;
+
+extern void start_server_listening_thread();
 
 int main(int argc, char *argv[])
 {
@@ -23,7 +26,13 @@ int main(int argc, char *argv[])
 
 	lte_attach();
 
-	user_equipment.battery.battery_drain_start();
+	thread_pool = thpool_init(2);
+
+	thpool_add_work(thread_pool, (void *)start_server_listening_thread, NULL);
+	thpool_add_work(thread_pool, user_equipment.battery.battery_drain, NULL);
+
+	thpool_wait(thread_pool);
+	thpool_destroy(thread_pool);
 
 	close(client_socket);
 	return 0;
