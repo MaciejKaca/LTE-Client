@@ -45,13 +45,15 @@ void set_socket_non_blocking(int socket)
 void send_data(int socket, void *data, int data_size, message_label *label)
 {
 	int result;
-	result = write(socket, (void *)label, sizeof(message_label));
 
-	if (result < 0)
-		error("Couldn't write to the socket.");
-
+	if(label != NULL)
+	{
+		result = write(socket, (void *)label, sizeof(message_label));
+		if (result < 0)
+			error("Couldn't write to the socket.");
+	}
+	
 	result = write(socket, data, data_size);
-
 	if (result < 0)
 		error("Couldn't write to the socket.");
 }

@@ -128,6 +128,11 @@ void listen_to_server()
 {
   int result;
   message_label label;
+  message_label ping_response = 
+  {
+    message_type: msg_ping_response,
+    message_length: 21
+  };
 
   while (user_equipment.battery.is_battery_drained() == false)
   {
@@ -136,6 +141,7 @@ void listen_to_server()
       printf("Battery is low!\n");
 
     read_data(client_socket, (void *)&label, sizeof(message_label));
+    send_data(client_socket, (void *)&ping_response, sizeof(message_label), NULL);
 
     printf("Message type: %d\n", label.message_type);
 
