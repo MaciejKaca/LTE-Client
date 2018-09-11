@@ -37,7 +37,7 @@ void create_battery()
 {
     user_equipment.battery.charge = 100;
     user_equipment.battery.battery_drain = (void *)battery_drain;
-    user_equipment.battery.battery_drain_start = battery_drain_start;
-    user_equipment.battery.is_battery_critical = is_battery_critical;
-    user_equipment.battery.is_battery_drained = is_battery_drained;
+    user_equipment.battery.battery_drain_start = (void *)battery_drain_start;
+    user_equipment.battery.is_battery_critical = (void *)is_battery_critical;
+    user_equipment.battery.is_battery_drained = (void *)is_battery_drained;
 }
