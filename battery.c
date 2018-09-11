@@ -18,19 +18,19 @@ void battery_drain()
     printf("Battery drained. I hope you're proud of yourself.\n");
 }
 
-void *battery_drain_start()
+void battery_drain_start()
 {
     thpool_add_work(thread_pool, (void *)battery_drain, NULL);
 }
 
-bool *is_battery_critical()
+bool is_battery_critical()
 {
-    return (void *)(user_equipment.battery.charge < 30);
+    return (user_equipment.battery.charge < 30);
 }
 
-bool *is_battery_drained()
+bool is_battery_drained()
 {
-    return (void *)(user_equipment.battery.charge == 0);
+    return (user_equipment.battery.charge == 0);
 }
 
 void create_battery()
