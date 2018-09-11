@@ -20,6 +20,6 @@ void set_socket_non_blocking(int socket);
 
 void send_data(int socket, void *data, int data_size, message_label *label);
 
-char *read_data(int socket, int data_size);
+int read_data(int socket, void *data, int data_size);
 
-void *receive_data(int socket);
+int receive_data(int socket, void *data, int data_size);

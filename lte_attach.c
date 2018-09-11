@@ -51,19 +51,19 @@ void perform_random_access_procedure()
 
   send_data(client_socket, (void *)&rap, sizeof(rap), &rap_label);
 
-  RandomAccessResponse *output_preamble;
+  RandomAccessResponse output_preamble;
 
-  output_preamble = receive_data(client_socket);
+  receive_data(client_socket, (void *)&output_preamble, sizeof(RandomAccessResponse));
 
-  printf("Random Acces Procedure succeded! \n");
+  printf("Random Acces Procedure succeded.\n");
   printf("---\n");
-  printf("Timing Advance Value: %d\n", output_preamble->timing_advance_value);
+  printf("Timing Advance Value: %d\n", output_preamble.timing_advance_value);
   printf("Uplink Resource Grant: %d\n",
-         output_preamble->uplink_resource_grant);
-  printf("Your C-RNTI: %d\n", output_preamble->temp_c_rnti);
+         output_preamble.uplink_resource_grant);
+  printf("Your C-RNTI: %d\n", output_preamble.temp_c_rnti);
   printf("---\n");
 
-  C_RNTI = output_preamble->temp_c_rnti;
+  C_RNTI = output_preamble.temp_c_rnti;
 }
 
 RRC_Connection_Request create_rrc_c_request()
@@ -102,13 +102,13 @@ void rrc_connection_setup()
 
   send_data(client_socket, (void *)&rrc_c_request, sizeof(rrc_c_request), &rrc_c_request_label);
 
-  RRC_connection_Setup *rrc_c_setup;
+  RRC_connection_Setup rrc_c_setup;
 
-  rrc_c_setup = receive_data(client_socket);
+  receive_data(client_socket, (void *)&rrc_c_setup, sizeof(RRC_connection_Setup));
 
-  printf("C-RNTI: %d\n", rrc_c_setup->c_rnti);
-  printf("PHR Config: %d\n", rrc_c_setup->phr_config.periodic_PHR_Timer);
-  printf("UPC Dedicated: %d\n", rrc_c_setup->UPC_Dedicatede.P0_UE_PUCCH);
+  printf("C-RNTI: %d\n", rrc_c_setup.c_rnti);
+  printf("PHR Config: %d\n", rrc_c_setup.phr_config.periodic_PHR_Timer);
+  printf("UPC Dedicated: %d\n", rrc_c_setup.UPC_Dedicatede.P0_UE_PUCCH);
 
   RRC_Connection_Setup_Complete rrc_c_setup_complete =
       create_rrc_c_setup_complete();
@@ -127,10 +127,7 @@ void rrc_connection_setup()
 void listen_to_server()
 {
   int result;
-
-  message_label *label;
-
-  printf("%ld\n", sizeof(label));
+  message_label label;
 
   while (user_equipment.battery.is_battery_drained() == false)
   {
@@ -138,9 +135,9 @@ void listen_to_server()
     if (user_equipment.battery.is_battery_critical() == true)
       printf("Battery is low!\n");
 
-    label = read_data(client_socket, sizeof(message_label));
+    read_data(client_socket, (void *)&label, sizeof(message_label));
 
-    printf("Message type: %d\n", label->message_type);
+    printf("Message type: %d\n", label.message_type);
 
     sleep(5);
   }
@@ -151,7 +148,6 @@ void listen_to_server()
 void start_server_listening_thread()
 {
   printf("Started: Listening\n");
-
   thpool_add_work(thread_pool, (void *)listen_to_server, NULL);
 }
 
