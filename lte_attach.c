@@ -3,6 +3,7 @@
 #include "Headers/rrc_connection.h"
 #include "Headers/user_equipment.h"
 #include "Headers/connection.h"
+#include "Headers/drx_config.h"
 
 #include <pthread.h>
 
@@ -124,6 +125,37 @@ void rrc_connection_setup()
   printf("RRC Connection succeded.\n");
 }
 
+DRX_Config create_drx_config()
+{
+  DRX_Config drx_config;
+
+  drx_config.on_duration_timer = on_duration_timer_e_psf2;
+  drx_config.drx_inactivity_timer = drx_inactivity_e_psf8;
+  drx_config.drx_retransmission_timer = drx_retransmission_e_psf2;
+  drx_config.long_drx_cycle_start_offset.label = long_drx_cycle_e_sf80;
+  drx_config.long_drx_cycle_start_offset.value = 0;
+  drx_config.short_drx.cycle = short_drx_e_sf40;
+  drx_config.short_drx.DRX_Short_Cycle_Timer = 3;
+
+  return drx_config;
+}
+
+void drx_config_setup()
+{
+  printf("---\n");
+  DRX_Config drx_config = create_drx_config();
+
+  message_label drx_config_label = 
+  {
+    message_type : msg_drx_config,
+    message_length: sizeof(DRX_Config)
+  };
+
+  printf("Sending DRX config.\n");
+  send_data(client_socket,(void *)&drx_config,sizeof(DRX_Config),&drx_config_label);
+  printf("Sent DRX Config.\n");
+}
+
 void listen_to_server()
 {
   int result;
@@ -161,5 +193,6 @@ void lte_attach()
 {
   perform_random_access_procedure();
   rrc_connection_setup();
+  drx_config_setup();
   printf("\n");
 }
