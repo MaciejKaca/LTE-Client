@@ -177,7 +177,9 @@ void listen_to_server()
 
     printf("Message type: %d\n", label.message_type);
 
-    sleep(5);
+    printf("Device goes to sleep.");
+    sleep(12);
+    printf("Device wakes up!");
   }
 
   printf("Listening stopped.\n");
