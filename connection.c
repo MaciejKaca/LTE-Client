@@ -66,13 +66,13 @@ char *read_data(int socket, int data_size)
 	bzero(buffer, data_size);
 	int result = read(socket, buffer, data_size);
 
-	if (result < 0)
-		error("Can't read from the socket.\n");
+	//if (result < 0)
+	//	printf("Can't read from the socket.\n");
 
 	return buffer;
 }
 
-char *receive_data(int socket)
+void *receive_data(int socket)
 {
 	message_label label;
 
@@ -90,16 +90,16 @@ char *receive_data(int socket)
 			case msg_rrc_connection_setup:
 				return read_data(socket, label.message_length);
 				break;
-			case msg_ping_response:
+			case msg_ping_request:
 				return read_data(socket, label.message_length);
 				break;
 			default:
-				return "XDDDD\n";
+				return "Unknown message type.\n";
 				break;
 			}
 			break;
 		}
-		else if (result < (int)sizeof(message_label))
+		else if (result > -1 && result < (int)sizeof(message_label))
 		{
 			printf("Wrong data received.\n");
 			continue;			

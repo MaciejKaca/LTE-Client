@@ -22,4 +22,4 @@ void send_data(int socket, void *data, int data_size, message_label *label);
 
 char *read_data(int socket, int data_size);
 
-char *receive_data(int socket);
+void *receive_data(int socket);

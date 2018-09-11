@@ -104,7 +104,7 @@ void rrc_connection_setup()
 
   RRC_connection_Setup *rrc_c_setup;
 
-  rrc_c_setup = receive_data(socket);
+  rrc_c_setup = receive_data(client_socket);
 
   printf("C-RNTI: %d\n", rrc_c_setup->c_rnti);
   printf("PHR Config: %d\n", rrc_c_setup->phr_config.periodic_PHR_Timer);
@@ -128,7 +128,7 @@ void listen_to_server()
 {
   int result;
 
-  message_label label = {};
+  message_label *label;
 
   printf("%ld\n", sizeof(label));
 
@@ -138,24 +138,9 @@ void listen_to_server()
     if (user_equipment.battery.is_battery_critical() == true)
       printf("Battery is low!\n");
 
-    result = read(client_socket, (void *)&label, sizeof(message_label));
+    label = read_data(client_socket, sizeof(message_label));
 
-    printf("%ld\n", result);
-
-    if (result == sizeof(message_label))
-    {
-      printf("Message received.\n");
-
-      switch (label.message_type)
-      {
-      case msg_ping_request:
-        break;
-      }
-    }
-    else if (result < sizeof(message_label))
-      printf("Wrong data received.\n");
-    else
-      printf("Can't read from the socket.\n");
+    printf("%d\n", label->message_length);
 
     sleep(5);
   }
@@ -163,7 +148,6 @@ void listen_to_server()
   printf("Listening stopped.\n");
 }
 
-// TODO: Create some kind of thread manager... :)
 void start_server_listening_thread()
 {
   printf("Started: Listening\n");
