@@ -2,6 +2,7 @@
 
 #include "error.h"
 #include "thpool.h"
+#include "message_label.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -17,3 +17,9 @@ void create_socket();
 void connect_to_server();
 
 void set_socket_non_blocking(int socket);
+
+void send_data(int socket, void *data, int data_size, message_label *label);
+
+int read_data(int socket, void *data, int data_size);
+
+int receive_data(int socket, void *data, int data_size);
