@@ -5,7 +5,8 @@ typedef enum Message_Type
 	msg_rrc_connection_request,
 	msg_rrc_connection_setup,
 	msg_ping_request,
-	msg_ping_response
+	msg_ping_response,
+    msg_drx_config
 } Message_Type;
 
 typedef struct message_label
