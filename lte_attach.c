@@ -45,7 +45,7 @@ void perform_random_access_procedure()
 
   printf("Sending: Random Access Preamble...\n");
   printf("---\n");
-  printf("Cyclic Prefix: %d\n", rap.cyclic_prefix);
+  printf("Cyclic Prefix: '%c'\n", rap.cyclic_prefix);
   printf("%s: %d\n", rap.sequence.type, rap.sequence.ra_rnti);
   printf("---\n");
 
