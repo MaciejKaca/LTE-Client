@@ -25,12 +25,12 @@ void *battery_drain_start()
 
 bool *is_battery_critical()
 {
-    return user_equipment.battery.charge < 30;
+    return (void *)(user_equipment.battery.charge < 30);
 }
 
 bool *is_battery_drained()
 {
-    return user_equipment.battery.charge == 0;
+    return (void *)(user_equipment.battery.charge == 0);
 }
 
 void create_battery()
