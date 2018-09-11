@@ -30,6 +30,7 @@ int main(int argc, char *argv[])
 
 	thread_pool = thpool_init(2);
 
+	user_equipment.power_off_on_trigger();
 	thpool_add_work(thread_pool, (void *)start_server_listening_thread, NULL);
 	thpool_add_work(thread_pool, user_equipment.battery.battery_drain, NULL);
 
