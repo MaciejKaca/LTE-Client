@@ -154,7 +154,7 @@ void drx_config_setup()
   };
 
   printf("Sending DRX config.\n");
-  send_data(client_socket,(void *)&drx_config,sizeof(DRX_Config),&drx_config_label);
+  send_data(client_socket, (void *)&drx_config,drx_config_label);
   printf("Sent DRX Config.\n");
 }
 
