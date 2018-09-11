@@ -42,18 +42,15 @@ void set_socket_non_blocking(int socket)
 	fcntl(socket, F_SETFL, flags | O_NONBLOCK);
 }
 
-void send_data(int socket, void *data, int data_size, message_label *label)
+void send_data(int socket, void *data, message_label label)
 {
 	int result;
 
-	if(label != NULL)
-	{
-		result = write(socket, (void *)label, sizeof(message_label));
-		if (result < 0)
-			error("Couldn't write to the socket.");
-	}
+	result = write(socket, (void *)&label, sizeof(message_label));
+	if (result < 0)
+		error("Couldn't write to the socket.");
 	
-	result = write(socket, data, data_size);
+	result = write(socket, data, label.message_length);
 	if (result < 0)
 		error("Couldn't write to the socket.");
 }
@@ -68,29 +65,27 @@ int read_data(int socket, void *data, int data_size)
 	return result;
 }
 
-int receive_data(int socket, void *data, int data_size)
+int receive_data(int socket, void *data, message_label *label)
 {
 	int result;
-	message_label label;
-
 	while(true)
 	{
-		result = read_data(socket, (void *)&label, sizeof(message_label));
+		result = read_data(socket, (void *)label, sizeof(message_label));
 		
 		sleep(0.5);
 		
 		if (result == sizeof(message_label))
 		{
-			switch (label.message_type)
+			switch (label->message_type)
 			{
 			case msg_random_access_response:
-				return read_data(socket, data, label.message_length);
+				return read_data(socket, data, label->message_length);
 				break;
 			case msg_rrc_connection_setup:
-				return read_data(socket, data, label.message_length);
+				return read_data(socket, data, label->message_length);
 				break;
 			case msg_ping_request:
-				return read_data(socket, data, label.message_length);
+				return read_data(socket, data, label->message_length);
 				break;
 			default:
 				printf("Unknown message type.\n");
