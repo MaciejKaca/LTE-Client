@@ -49,22 +49,28 @@ void send_data(int socket, void *data, int data_size, message_label *label)
 
 	if (result < 0)
 		error("Couldn't write to the socket.");
-	else
-		printf("Data sent successfully.\n");
+	//else
+	//	printf("Data sent successfully.\n");
 
 	result = write(socket, data, data_size);
 
 	if (result < 0)
 		error("Couldn't write to the socket.");
-	else
-		printf("Data sent successfully.\n");
+	//else
+	//	printf("Data sent successfully.\n");
 }
 
 char *read_data(int socket, int data_size)
 {
-	char *buffer = malloc(data_size);
-	bzero(buffer, data_size);
-	int result = read(socket, buffer, data_size);
+	int result = 0;
+	char *buffer;
+
+	while(result < 1)
+	{
+		buffer = malloc(data_size);
+		bzero(buffer, data_size);
+		result = read(socket, buffer, data_size);
+	}
 
 	//if (result < 0)
 	//	printf("Can't read from the socket.\n");

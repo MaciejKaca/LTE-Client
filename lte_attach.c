@@ -140,7 +140,7 @@ void listen_to_server()
 
     label = read_data(client_socket, sizeof(message_label));
 
-    printf("%d\n", label->message_length);
+    printf("Message type: %d\n", label->message_type);
 
     sleep(5);
   }
