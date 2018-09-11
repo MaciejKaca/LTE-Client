@@ -49,11 +49,12 @@ void perform_random_access_procedure()
   printf("%s: %d\n", rap.sequence.type, rap.sequence.ra_rnti);
   printf("---\n");
 
-  send_data(client_socket, (void *)&rap, sizeof(rap), &rap_label);
+  send_data(client_socket, (void *)&rap, rap_label);
 
   RandomAccessResponse output_preamble;
+  message_label output_preamble_label;
 
-  receive_data(client_socket, (void *)&output_preamble, sizeof(RandomAccessResponse));
+  receive_data(client_socket, (void *)&output_preamble, &output_preamble_label);
 
   printf("Random Acces Procedure succeded.\n");
   printf("---\n");
@@ -100,11 +101,12 @@ void rrc_connection_setup()
         message_length : sizeof(RRC_Connection_Request)
       };
 
-  send_data(client_socket, (void *)&rrc_c_request, sizeof(rrc_c_request), &rrc_c_request_label);
+  send_data(client_socket, (void *)&rrc_c_request, rrc_c_request_label);
 
   RRC_connection_Setup rrc_c_setup;
+  message_label rrc_c_setup_label;
 
-  receive_data(client_socket, (void *)&rrc_c_setup, sizeof(RRC_connection_Setup));
+  receive_data(client_socket, (void *)&rrc_c_setup, &rrc_c_setup_label);
 
   printf("C-RNTI: %d\n", rrc_c_setup.c_rnti);
   printf("PHR Config: %d\n", rrc_c_setup.phr_config.periodic_PHR_Timer);
@@ -119,7 +121,7 @@ void rrc_connection_setup()
       message_length : sizeof(RRC_Connection_Setup_Complete)
     };
 
-  send_data(client_socket, (void *)&rrc_c_setup_complete, sizeof(rrc_c_setup_complete), &rrc_c_request_label);
+  send_data(client_socket, (void *)&rrc_c_setup_complete, rrc_c_request_label);
 
   printf("RRC Connection succeded.\n");
 }
@@ -131,19 +133,27 @@ void listen_to_server()
   message_label ping_response = 
   {
     message_type: msg_ping_response,
-    message_length: 21
+    message_length: 8
   };
 
   while (user_equipment.battery.is_battery_drained() == false)
   {
-    printf("PING THREAD\n");
     if (user_equipment.battery.is_battery_critical() == true)
       printf("Battery is low!\n");
 
     read_data(client_socket, (void *)&label, sizeof(message_label));
-    send_data(client_socket, (void *)&ping_response, sizeof(message_label), NULL);
+    send_data(client_socket, (void *)&ping_response, ping_response);
 
-    printf("Message type: %d\n", label.message_type);
+    switch(label.message_type)
+    {
+      case msg_ping_request:
+        printf("------------------------------------------\n");
+        printf("RECEIVED MESSAGE\n");
+        printf("Type: msg_ping_request\n");
+        printf("------------------------------------------\n");
+      default:
+        break;
+    }
 
     sleep(5);
   }
