@@ -32,9 +32,6 @@ void listen_to_server()
 
     while (user_equipment.battery.is_battery_drained() == false)
     {
-        if (user_equipment.battery.is_battery_critical() == true)
-            printf("Battery is low!\n");
-
         bool ping_sent = false;
         while (true)
         {
