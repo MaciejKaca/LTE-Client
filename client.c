@@ -1,5 +1,4 @@
 #include "Headers/common.h"
-
 #include "Headers/connection.h"
 #include "Headers/lte_attach.h"
 #include "Headers/preambles.h"
