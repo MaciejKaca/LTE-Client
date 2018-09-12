@@ -19,7 +19,7 @@ void INThandler(int sig)
 
 	signal(sig, SIG_IGN);
 	send_data(client_socket, (void *)shutdown, shutdown_label);
-	printf("Shutdown UE\n");
+	printf("\nShutdown UE\n");
 	close(client_socket);
 	exit(0);
 }
