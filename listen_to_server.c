@@ -1,4 +1,4 @@
-#include "Headers/ping.h"
+#include "Headers/listen_to_server.h"
 #include "Headers/user_equipment.h"
 #include "Headers/connection.h"
 #include <pthread.h>
@@ -26,7 +26,7 @@ void resolve_ping(bool ping_already_sent)
         send_data(client_socket, (void *)&ping_response, ping_response_label);
 }
 
-void ping_server()
+void listen_to_server()
 {
     message_label label;
 

@@ -2,4 +2,4 @@
 
 void resolve_ping(bool ping_already_sent);
 
-void ping_server();
+void listen_to_server();

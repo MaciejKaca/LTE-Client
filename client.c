@@ -3,14 +3,14 @@
 #include "Headers/lte_attach.h"
 #include "Headers/preambles.h"
 #include "Headers/user_equipment.h"
-#include "Headers/ping.h"
+#include "Headers/listen_to_server.h"
 #include <pthread.h>
 
 int client_socket;
 UserEquipment user_equipment;
 threadpool thread_pool;
 
-extern void ping_server();
+extern void listen_to_server();
 
 int main(int argc, char *argv[])
 {
@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 	thread_pool = thpool_init(2);
 
 	user_equipment.power_off_on_trigger();
-	thpool_add_work(thread_pool, (void *)ping_server, NULL);
+	thpool_add_work(thread_pool, (void *)listen_to_server, NULL);
 	thpool_add_work(thread_pool, user_equipment.battery.battery_drain, NULL);
 
 	thpool_wait(thread_pool);
