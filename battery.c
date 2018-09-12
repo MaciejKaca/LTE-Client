@@ -13,7 +13,7 @@ bool is_battery_critical() { return (user_equipment.battery.charge < 30); }
 
 void battery_drain()
 {
-	bool battery_critical_sended;
+	bool battery_critical_sended = false;
 
 	while (user_equipment.battery.is_battery_drained() == false)
 	{
@@ -33,7 +33,7 @@ void battery_drain()
 				message_length : sizeof(battery_critical_text)
 			};
 
-			battery_critical_sended == true;
+			battery_critical_sended = true;
 			send_data(client_socket, (void *)battery_critical_text, battery_critical_label);
 		}
 	}
