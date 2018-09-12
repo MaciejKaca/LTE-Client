@@ -67,7 +67,7 @@ int read_data_blocking(int socket, void *data, int data_size)
 	return result;
 }
 
-int receive_data_blocking(int socket, void *data, message_label *label)
+int recive_data_blocking(int socket, void *data, message_label *label)
 {
 	int result;
 	while (true)
