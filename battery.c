@@ -9,6 +9,8 @@ extern UserEquipment user_equipment;
 extern threadpool thread_pool;
 extern int client_socket;
 
+bool is_battery_critical() { return (user_equipment.battery.charge < 30); }
+
 void battery_drain()
 {
 	bool battery_critical_sended;
@@ -22,9 +24,9 @@ void battery_drain()
 			int time_before_battery_loss = (rand() % 600000) + 30000;
 			usleep(time_before_battery_loss);
 		}
-		if (is_battery_critical == true && battery_critical_sended == false)
+		if (is_battery_critical() == true && battery_critical_sended == false)
 		{
-			char battery_critical_text = "Battery_critical";
+			char battery_critical_text[] = "Battery_critical";
 
 			message_label battery_critical_label = {
 				message_type : msg_battery_critcal,
@@ -42,8 +44,6 @@ void battery_drain_start()
 {
 	thpool_add_work(thread_pool, (void *)battery_drain, NULL);
 }
-
-bool is_battery_critical() { return (user_equipment.battery.charge < 30); }
 
 bool is_battery_drained() { return (user_equipment.battery.charge == 0); }
 
