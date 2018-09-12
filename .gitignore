@@ -10,3 +10,4 @@ connection.o
 error.o
 lte_attach.o
 lte_client
+valgrind-out.txt

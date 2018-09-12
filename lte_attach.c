@@ -2,11 +2,14 @@
 #include "Headers/preambles.h"
 #include "Headers/rrc_connection.h"
 #include "Headers/user_equipment.h"
+#include "Headers/connection.h"
+#include "Headers/drx_config.h"
 
 #include <pthread.h>
 
 extern int client_socket;
 extern UserEquipment user_equipment;
+extern threadpool thread_pool;
 
 int C_RNTI;
 
@@ -35,37 +38,26 @@ void perform_random_access_procedure()
   printf("Started: Random Access Procedure\n");
 
   RandomAccessPreamble rap = create_input_preamble();
+  message_label rap_label =
+      {
+        message_type : msg_random_access_preamble,
+        message_length : sizeof(RandomAccessPreamble)
+      };
 
   printf("Sending: Random Access Preamble...\n");
   printf("---\n");
-  printf("Cyclic Prefix: %d\n", rap.cyclic_prefix);
+  printf("Cyclic Prefix: '%c'\n", rap.cyclic_prefix);
   printf("%s: %d\n", rap.sequence.type, rap.sequence.ra_rnti);
   printf("---\n");
 
-  int result = write(client_socket, (void *)&rap, sizeof(rap));
-
-  if (result < 0)
-    error("Couldn't write preamble to the server.");
-  else
-    printf("Preamble sent successfully!\n\n");
-
-  printf("Reading: Random Access Response...\n");
+  send_data(client_socket, (void *)&rap, rap_label);
 
   RandomAccessResponse output_preamble;
-  result = read(client_socket, &output_preamble, sizeof(output_preamble));
+  message_label output_preamble_label;
 
-  if (result < 0)
-    error("Couldn't read output preamble from the server.");
-  else
-    printf("Preamble response red successfully!\n");
+  receive_data(client_socket, (void *)&output_preamble, &output_preamble_label);
 
-  result = validate_preamble(rap, output_preamble);
-  if (result == false)
-    error("Preambles do not match.\n");
-  else
-    printf("%s's match!\n\n", rap.sequence.type);
-
-  printf("Random Acces Procedure succeded! \n");
+  printf("Random Acces Procedure succeded.\n");
   printf("---\n");
   printf("Timing Advance Value: %d\n", output_preamble.timing_advance_value);
   printf("Uplink Resource Grant: %d\n",
@@ -104,23 +96,18 @@ void rrc_connection_setup()
   printf("Started: RRC Connection Setup\n");
 
   RRC_Connection_Request rrc_c_request = create_rrc_c_request();
+  message_label rrc_c_request_label =
+      {
+        message_type : msg_rrc_connection_request,
+        message_length : sizeof(RRC_Connection_Request)
+      };
 
-  int result =
-      write(client_socket, (void *)&rrc_c_request, sizeof(rrc_c_request));
-  if (result < 0)
-    error("Couldn't write rrc_c_request to server.");
-  else
-    printf("RRC Connection request send.\n");
+  send_data(client_socket, (void *)&rrc_c_request, rrc_c_request_label);
 
   RRC_connection_Setup rrc_c_setup;
-  result = read(client_socket, (void *)&rrc_c_setup, sizeof(rrc_c_setup));
-  if (result < 0)
-    error("Couldn't read rrc_c_setup from server.");
-  else
-    printf("RRC Connection Setup received.\n");
+  message_label rrc_c_setup_label;
 
-  if (rrc_c_setup.c_rnti == C_RNTI)
-    printf("RRC Connection Setup is correct.\n");
+  receive_data(client_socket, (void *)&rrc_c_setup, &rrc_c_setup_label);
 
   printf("C-RNTI: %d\n", rrc_c_setup.c_rnti);
   printf("PHR Config: %d\n", rrc_c_setup.phr_config.periodic_PHR_Timer);
@@ -129,41 +116,93 @@ void rrc_connection_setup()
   RRC_Connection_Setup_Complete rrc_c_setup_complete =
       create_rrc_c_setup_complete();
 
-  result = write(client_socket, (void *)&rrc_c_setup_complete,
-                 sizeof(rrc_c_setup_complete));
-  if (result < 0)
-    error("Couldn't write rrc_c_setup_complete to server.\n");
-  else
-    printf("RRC Connection Setup Complete send.\n");
+  message_label rrc_c_setup_complete_label =
+    {
+      message_type : msg_rrc_connection_setup,
+      message_length : sizeof(RRC_Connection_Setup_Complete)
+    };
+
+  send_data(client_socket, (void *)&rrc_c_setup_complete, rrc_c_request_label);
 
   printf("RRC Connection succeded.\n");
 }
 
-void *listen_to_server()
+DRX_Config create_drx_config()
 {
-  char buffer[5];
-  while (true)
-  {
-    bzero(buffer, sizeof(buffer));
-    read(client_socket, (void *)&buffer, sizeof(buffer));
-    printf("Response: %s\n", buffer);
-  }
+  DRX_Config drx_config;
+
+  drx_config.on_duration_timer = on_duration_timer_e_psf2;
+  drx_config.drx_inactivity_timer = drx_inactivity_e_psf8;
+  drx_config.drx_retransmission_timer = drx_retransmission_e_psf2;
+  drx_config.long_drx_cycle_start_offset.label = long_drx_cycle_e_sf80;
+  drx_config.long_drx_cycle_start_offset.value = 0;
+  drx_config.short_drx.cycle = short_drx_e_sf40;
+  drx_config.short_drx.DRX_Short_Cycle_Timer = 3;
+
+  return drx_config;
 }
 
-// TODO: Create some kind of thread manager... :)
+void drx_config_setup()
+{
+  printf("---\n");
+  DRX_Config drx_config = create_drx_config();
+
+  message_label drx_config_label = 
+  {
+    message_type : msg_drx_config,
+    message_length: sizeof(DRX_Config)
+  };
+
+  printf("Sending DRX config.\n");
+  send_data(client_socket, (void *)&drx_config,drx_config_label);
+  printf("Sent DRX Config.\n");
+}
+
+void listen_to_server()
+{
+  int result;
+  message_label label;
+  message_label ping_response = 
+  {
+    message_type: msg_ping_response,
+    message_length: 8
+  };
+
+  while (user_equipment.battery.is_battery_drained() == false)
+  {
+    if (user_equipment.battery.is_battery_critical() == true)
+      printf("Battery is low!\n");
+
+    read_data(client_socket, (void *)&label, sizeof(message_label));
+    send_data(client_socket, (void *)&ping_response, ping_response);
+
+    switch(label.message_type)
+    {
+      case msg_ping_request:
+        printf("------------------------------------------\n");
+        printf("RECEIVED MESSAGE\n");
+        printf("Type: msg_ping_request\n");
+        printf("------------------------------------------\n");
+      default:
+        break;
+    }
+
+    sleep(5);
+  }
+
+  printf("Listening stopped.\n");
+}
+
 void start_server_listening_thread()
 {
   printf("Started: Listening\n");
-
-  pthread_t server_listening_thread;
-  pthread_create(&server_listening_thread, NULL, listen_to_server, NULL);
-  pthread_join(server_listening_thread, NULL);
+  thpool_add_work(thread_pool, (void *)listen_to_server, NULL);
 }
 
 void lte_attach()
 {
   perform_random_access_procedure();
   rrc_connection_setup();
-  printf("hey b0o0zs\n");
-  //start_server_listening_thread();
+  drx_config_setup();
+  printf("\n");
 }
