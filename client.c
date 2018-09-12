@@ -4,13 +4,11 @@
 #include "Headers/preambles.h"
 #include "Headers/user_equipment.h"
 #include "Headers/listen_to_server.h"
+#include "Headers/threading.h"
 #include <pthread.h>
 
 int client_socket;
 UserEquipment user_equipment;
-threadpool thread_pool;
-
-extern void listen_to_server();
 
 int main(int argc, char *argv[])
 {
@@ -23,19 +21,9 @@ int main(int argc, char *argv[])
 
 	create_user_equipment();
 	create_session(server_address, port);
-
 	lte_attach();
-
 	set_socket_non_blocking(client_socket);
-
-	thread_pool = thpool_init(2);
-
-	user_equipment.power_off_on_trigger();
-	thpool_add_work(thread_pool, (void *)listen_to_server, NULL);
-	thpool_add_work(thread_pool, user_equipment.battery.battery_drain, NULL);
-
-	thpool_wait(thread_pool);
-	thpool_destroy(thread_pool);
+	create_thread_pool();
 
 	close(client_socket);
 	return 0;
