@@ -59,7 +59,7 @@ int read_data(int socket, void *data, int data_size)
 {
 	int result = 0;
 
-	while(result != data_size)
+	//while(result != data_size)
 		result = read(socket, data, data_size);
 
 	return result;
@@ -72,7 +72,7 @@ int receive_data(int socket, void *data, message_label *label)
 	{
 		result = read_data(socket, (void *)label, sizeof(message_label));
 		
-		sleep(0.5);
+		usleep(50000);
 		
 		if (result == sizeof(message_label))
 		{

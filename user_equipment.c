@@ -50,6 +50,7 @@ UserEquipment create_user_equipment()
     user_equipment.power_off_on_trigger = power_off_on_trigger;
     create_user_equipment_plmn();
     create_user_equipment_imsi();
+    user_equipment.is_sleeping = false;
 
     create_battery();
 }

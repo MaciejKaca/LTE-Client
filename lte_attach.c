@@ -173,23 +173,35 @@ void listen_to_server()
     if (user_equipment.battery.is_battery_critical() == true)
       printf("Battery is low!\n");
 
-    read_data(client_socket, (void *)&label, sizeof(message_label));
-    send_data(client_socket, (void *)&ping_response, ping_response);
-
-    switch(label.message_type)
+    bool ping_sent = false;
+    while(true)
     {
-      case msg_ping_request:
-        printf("------------------------------------------\n");
-        printf("RECEIVED MESSAGE\n");
-        printf("Type: msg_ping_request\n");
-        printf("------------------------------------------\n");
-      default:
+      int response = read_data(client_socket, (void *)&label, sizeof(message_label));
+      if(response < 0)
         break;
-    }
 
-    printf("Device goes to sleep.");
-    sleep(12);
-    printf("Device wakes up!");
+      switch(label.message_type)
+      {
+        case msg_ping_request:
+          printf("------------------------------------------\n");
+          printf("RECEIVED MESSAGE\n");
+          printf("Type: msg_ping_request\n");
+          printf("------------------------------------------\n");
+          if(!ping_sent) send_data(client_socket, (void *)&ping_response, ping_response);
+          ping_sent = true;
+          break;
+        default:
+          break;
+      }
+    }
+    
+    user_equipment.is_sleeping = true;
+    printf("---Device goes to sleep.---\n");
+    sleep(4);
+    printf("\n---Device wakes up!---\n");
+    usleep(100000);
+    user_equipment.is_sleeping = false;
+    sleep(1);
   }
 
   printf("Listening stopped.\n");
@@ -197,6 +209,7 @@ void listen_to_server()
 
 void start_server_listening_thread()
 {
+  printf("---\n");
   printf("Started: Listening\n");
   thpool_add_work(thread_pool, (void *)listen_to_server, NULL);
 }

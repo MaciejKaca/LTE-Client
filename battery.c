@@ -10,9 +10,13 @@ void battery_drain()
 {
     while (user_equipment.battery.is_battery_drained() == false)
     {
-        user_equipment.battery.charge -= 1;
-        sleep(1);
-        printf("Battery: %d%%\n", user_equipment.battery.charge);
+        if(!user_equipment.is_sleeping)
+        {
+            user_equipment.battery.charge -= 1;
+            printf("Battery: %d%%\n", user_equipment.battery.charge);
+            int time_before_battery_loss = (rand() % 600000) + 30000;
+            usleep(time_before_battery_loss);
+        }
     }
 
     printf("Battery drained. I hope you're proud of yourself.\n");
