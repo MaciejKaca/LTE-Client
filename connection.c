@@ -57,7 +57,7 @@ int send_data(int socket, void *data, message_label label)
 	return result;
 }
 
-int read_data(int socket, void *data, int data_size)
+int read_data_blocking(int socket, void *data, int data_size)
 {
 	int result = 0;
 
@@ -67,27 +67,24 @@ int read_data(int socket, void *data, int data_size)
 	return result;
 }
 
-int receive_data(int socket, void *data, message_label *label)
+int receive_data_blocking(int socket, void *data, message_label *label)
 {
 	int result;
 	while(true)
 	{
-		result = read_data(socket, (void *)label, sizeof(message_label));
+		result = read_data_blocking(socket, (void *)label, sizeof(message_label));
 		
-		sleep(0.5);
+		usleep(50000);
 		
 		if (result == sizeof(message_label))
 		{
 			switch (label->message_type)
 			{
 			case msg_random_access_response:
-				return read_data(socket, data, label->message_length);
+				return read_data_blocking(socket, data, label->message_length);
 				break;
 			case msg_rrc_connection_setup:
-				return read_data(socket, data, label->message_length);
-				break;
-			case msg_ping_request:
-				return read_data(socket, data, label->message_length);
+				return read_data_blocking(socket, data, label->message_length);
 				break;
 			default:
 				printf("Unknown message type.\n");
