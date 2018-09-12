@@ -6,17 +6,17 @@
  *
  */
 /** @file thpool.h */ /*
- *
- ********************************/
+					   *
+					   ********************************/
 
 #define _POSIX_C_SOURCE 200809L
-#include <unistd.h>
+#include <errno.h>
+#include <pthread.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <pthread.h>
-#include <errno.h>
 #include <time.h>
+#include <unistd.h>
 #if defined(__linux__)
 #include <sys/prctl.h>
 #endif
@@ -138,7 +138,8 @@ struct thpool_ *thpool_init(int num_threads)
 	}
 
 	/* Make threads in pool */
-	thpool_p->threads = (struct thread **)malloc(num_threads * sizeof(struct thread *));
+	thpool_p->threads =
+		(struct thread **)malloc(num_threads * sizeof(struct thread *));
 	if (thpool_p->threads == NULL)
 	{
 		err("thpool_init(): Could not allocate memory for threads\n");
@@ -308,13 +309,13 @@ static void thread_hold(int sig_id)
 }
 
 /* What each thread is doing
-*
-* In principle this is an endless loop. The only time this loop gets interuppted is once
-* thpool_destroy() is invoked or the program exits.
-*
-* @param  thread        thread that will run this function
-* @return nothing
-*/
+ *
+ * In principle this is an endless loop. The only time this loop gets
+ * interuppted is once thpool_destroy() is invoked or the program exits.
+ *
+ * @param  thread        thread that will run this function
+ * @return nothing
+ */
 static void *thread_do(struct thread *thread_p)
 {
 
@@ -323,7 +324,8 @@ static void *thread_do(struct thread *thread_p)
 	sprintf(thread_name, "thread-pool-%d", thread_p->id);
 
 #if defined(__linux__)
-	/* Use prctl instead to prevent using _GNU_SOURCE flag and implicit declaration */
+	/* Use prctl instead to prevent using _GNU_SOURCE flag and implicit
+	 * declaration */
 	prctl(PR_SET_NAME, thread_name);
 #elif defined(__APPLE__) && defined(__MACH__)
 	pthread_setname_np(thread_name);
@@ -390,10 +392,7 @@ static void *thread_do(struct thread *thread_p)
 }
 
 /* Frees a thread  */
-static void thread_destroy(thread *thread_p)
-{
-	free(thread_p);
-}
+static void thread_destroy(thread *thread_p) { free(thread_p); }
 
 /* ============================ JOB QUEUE =========================== */
 
@@ -516,10 +515,7 @@ static void bsem_init(bsem *bsem_p, int value)
 }
 
 /* Reset semaphore to 0 */
-static void bsem_reset(bsem *bsem_p)
-{
-	bsem_init(bsem_p, 0);
-}
+static void bsem_reset(bsem *bsem_p) { bsem_init(bsem_p, 0); }
 
 /* Post to at least one thread */
 static void bsem_post(bsem *bsem_p)

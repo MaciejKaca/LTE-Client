@@ -31,8 +31,8 @@ void connect_to_server(char *server_addres, int port)
 		  server->h_length);
 	serv_addr.sin_port = htons(port);
 
-	if (connect(client_socket, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) <
-		0)
+	if (connect(client_socket, (struct sockaddr *)&serv_addr,
+				sizeof(serv_addr)) < 0)
 		error("Connection failed!");
 }
 
@@ -49,7 +49,7 @@ int send_data(int socket, void *data, message_label label)
 	result = write(socket, (void *)&label, sizeof(message_label));
 	if (result < 0)
 		error("Couldn't write to the socket.");
-	
+
 	result = write(socket, data, label.message_length);
 	if (result < 0)
 		error("Couldn't write to the socket.");
@@ -61,7 +61,7 @@ int read_data_blocking(int socket, void *data, int data_size)
 {
 	int result = 0;
 
-	while(result != data_size)
+	while (result != data_size)
 		result = read(socket, data, data_size);
 
 	return result;
@@ -70,12 +70,13 @@ int read_data_blocking(int socket, void *data, int data_size)
 int receive_data_blocking(int socket, void *data, message_label *label)
 {
 	int result;
-	while(true)
+	while (true)
 	{
-		result = read_data_blocking(socket, (void *)label, sizeof(message_label));
-		
+		result =
+			read_data_blocking(socket, (void *)label, sizeof(message_label));
+
 		usleep(50000);
-		
+
 		if (result == sizeof(message_label))
 		{
 			switch (label->message_type)
@@ -93,6 +94,7 @@ int receive_data_blocking(int socket, void *data, message_label *label)
 			}
 			break;
 		}
-		else continue;
+		else
+			continue;
 	}
 }

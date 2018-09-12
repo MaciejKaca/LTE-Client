@@ -2,11 +2,11 @@
 
 #include "common.h"
 
+#include <fcntl.h>
 #include <netdb.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <sys/types.h>
-#include <fcntl.h>
 
 extern int client_socket;
 
