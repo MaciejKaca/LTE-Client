@@ -42,7 +42,7 @@ void set_socket_non_blocking(int socket)
 	fcntl(socket, F_SETFL, flags | O_NONBLOCK);
 }
 
-void send_data(int socket, void *data, message_label label)
+int send_data(int socket, void *data, message_label label)
 {
 	int result;
 
@@ -53,6 +53,8 @@ void send_data(int socket, void *data, message_label label)
 	result = write(socket, data, label.message_length);
 	if (result < 0)
 		error("Couldn't write to the socket.");
+
+	return result;
 }
 
 int read_data(int socket, void *data, int data_size)
@@ -89,6 +91,7 @@ int receive_data(int socket, void *data, message_label *label)
 				break;
 			default:
 				printf("Unknown message type.\n");
+				continue;
 				break;
 			}
 			break;
