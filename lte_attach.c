@@ -161,31 +161,52 @@ void drx_config_setup()
 void listen_to_server()
 {
   int result;
-  message_label label;
-  message_label ping_response = 
+  message_label ping_request_label = {};
+  
+  message_label ping_response_label = 
   {
     message_type: msg_ping_response,
     message_length: 8
   };
+
+  char ping_response[64];
+  char ping_request[64];
 
   while (user_equipment.battery.is_battery_drained() == false)
   {
     if (user_equipment.battery.is_battery_critical() == true)
       printf("Battery is low!\n");
 
-    read_data(client_socket, (void *)&label, sizeof(message_label));
-    send_data(client_socket, (void *)&ping_response, ping_response);
-
-    switch(label.message_type)
+    result = receive_data(client_socket, (void *)&ping_request, &ping_request_label);
+    printf("%d\n", result);
+    if(result > 0)
     {
-      case msg_ping_request:
-        printf("------------------------------------------\n");
-        printf("RECEIVED MESSAGE\n");
-        printf("Type: msg_ping_request\n");
-        printf("------------------------------------------\n");
-      default:
-        break;
+      switch(ping_request_label.message_type)
+      {
+        case msg_ping_request:
+          printf("------------------------------------------\n");
+          printf("RECEIVED MESSAGE\n");
+          printf("Type: msg_ping_request\n");
+          printf("------------------------------------------\n");
+        default:
+          break;
+      }
     }
+    else
+      printf("Can't receive ping request.\n");
+
+    result = send_data(client_socket, (void *)&ping_response, ping_response_label);
+
+    if(result > 0)
+    {
+      printf("------------------------------------------\n");
+      printf("SEND MESSAGE\n");
+      printf("Type: msg_ping_response\n");
+      printf("------------------------------------------\n");
+    }
+    else
+      printf("Can't send ping response.\n");
+
 
     sleep(5);
   }
