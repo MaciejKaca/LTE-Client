@@ -166,7 +166,7 @@ void listen_to_server()
   message_label ping_response_label = 
   {
     message_type: msg_ping_response,
-    message_length: 8
+    message_length: 64
   };
 
   char ping_response[64];
