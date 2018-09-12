@@ -2,8 +2,8 @@
 
 #include "Headers/connection.h"
 #include "Headers/lte_attach.h"
-#include "Headers/user_equipment.h"
 #include "Headers/preambles.h"
+#include "Headers/user_equipment.h"
 #include <pthread.h>
 
 int client_socket;

@@ -31,8 +31,8 @@ void connect_to_server(char *server_addres, int port)
 		  server->h_length);
 	serv_addr.sin_port = htons(port);
 
-	if (connect(client_socket, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) <
-		0)
+	if (connect(client_socket, (struct sockaddr *)&serv_addr,
+				sizeof(serv_addr)) < 0)
 		error("Connection failed!");
 }
 
@@ -42,57 +42,59 @@ void set_socket_non_blocking(int socket)
 	fcntl(socket, F_SETFL, flags | O_NONBLOCK);
 }
 
-void send_data(int socket, void *data, message_label label)
+int send_data(int socket, void *data, message_label label)
 {
 	int result;
 
 	result = write(socket, (void *)&label, sizeof(message_label));
 	if (result < 0)
 		error("Couldn't write to the socket.");
-	
+
 	result = write(socket, data, label.message_length);
 	if (result < 0)
 		error("Couldn't write to the socket.");
+
+	return result;
 }
 
-int read_data(int socket, void *data, int data_size)
+int read_data_blocking(int socket, void *data, int data_size)
 {
 	int result = 0;
 
-	while(result != data_size)
+	while (result != data_size)
 		result = read(socket, data, data_size);
 
 	return result;
 }
 
-int receive_data(int socket, void *data, message_label *label)
+int receive_data_blocking(int socket, void *data, message_label *label)
 {
 	int result;
-	while(true)
+	while (true)
 	{
-		result = read_data(socket, (void *)label, sizeof(message_label));
-		
-		sleep(0.5);
-		
+		result =
+			read_data_blocking(socket, (void *)label, sizeof(message_label));
+
+		usleep(50000);
+
 		if (result == sizeof(message_label))
 		{
 			switch (label->message_type)
 			{
 			case msg_random_access_response:
-				return read_data(socket, data, label->message_length);
+				return read_data_blocking(socket, data, label->message_length);
 				break;
 			case msg_rrc_connection_setup:
-				return read_data(socket, data, label->message_length);
-				break;
-			case msg_ping_request:
-				return read_data(socket, data, label->message_length);
+				return read_data_blocking(socket, data, label->message_length);
 				break;
 			default:
 				printf("Unknown message type.\n");
+				continue;
 				break;
 			}
 			break;
 		}
-		else continue;
+		else
+			continue;
 	}
 }
