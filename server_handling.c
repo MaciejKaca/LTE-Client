@@ -31,7 +31,9 @@ void resolve_ping(bool ping_already_sent)
 void server_listen_respond()
 {
 	message_label label;
+	memset(&label, 0, sizeof(message_label));
 	bool ping_sent = false;
+	
 	while (true)
 	{
 		int response =
@@ -75,12 +77,15 @@ void download_file()
 			  file_download_request_label);
 
 	message_label label;
+	memset(&label, 0, sizeof(message_label));
+
 	do
 	{
 		read(client_socket, (void*)&label, sizeof(label));
 	} while (label.message_type != msg_download_info);
 
     Download_Info download_info;
+	memset(&download_info, 0, sizeof(Download_Info));
     read(client_socket,(void*)&download_info,sizeof(download_info));
 
 	printf("---File download started!---\n");
@@ -88,11 +93,13 @@ void download_file()
     {
 	    message_label label;
         Download_Packet packet;
+		memset(&label, 0, sizeof(message_label));
+		memset(&packet, 0, sizeof(Download_Packet));
 
-        while(label.message_type != msg_download_packet)
+        do
         {
             read(client_socket,(void*)&packet,sizeof(label));
-        }
+        } while(label.message_type != msg_download_packet);
 
         read(client_socket,(void*)&packet,sizeof(packet));
         if(packet.packet_number == i)
@@ -108,7 +115,7 @@ void server_handle_IO()
 	while (user_equipment.battery.is_battery_drained() == false)
 	{
 		server_listen_respond();
-		server_send_requests();
+		//server_send_requests();
 
 		user_equipment.is_sleeping = true;
 		printf("---Device goes to sleep.---\n");
