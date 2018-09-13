@@ -7,6 +7,8 @@
 
 #include <pthread.h>
 
+#define NAS_INFO "C1332BCCAD1231BAFF21"
+
 extern int client_socket;
 extern UserEquipment user_equipment;
 extern threadpool thread_pool;
@@ -91,7 +93,7 @@ RRC_Connection_Setup_Complete create_rrc_c_setup_complete()
 	memset(&rrc_c_setup_complete, 0, sizeof(RRC_Connection_Setup_Complete));
 
 	strncpy(rrc_c_setup_complete.plmn, user_equipment.plmn, 7);
-	strcpy(rrc_c_setup_complete.dedicated_info_nas, "C1332BCCAD1231BAFF21");
+	strcpy(rrc_c_setup_complete.dedicated_info_nas, NAS_INFO);
 
 	return rrc_c_setup_complete;
 }
