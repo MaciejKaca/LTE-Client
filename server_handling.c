@@ -1,11 +1,13 @@
 #include "Headers/server_handling.h"
 #include "Headers/connection.h"
+#include "Headers/download.h"
 #include "Headers/user_equipment.h"
 #include <pthread.h>
 
 extern int client_socket;
 extern UserEquipment user_equipment;
 extern threadpool thread_pool;
+extern int C_RNTI;
 
 void resolve_ping(bool ping_already_sent)
 {
@@ -53,18 +55,51 @@ void server_listen_respond()
 	}
 }
 
-void server_send_requests()
-{
-    download_file();
+void server_send_requests() 
+{ 
+    download_file(); 
 }
 
 void download_file()
 {
 	printf("---Sending request for file download.---\n");
+	Download_Request file_download_request = {
+		filename : "file.txt",
+		client_C_RNTI : C_RNTI
+	};
+	message_label file_download_request_label = {
+		message_type : msg_request_download,
+		message_length : sizeof(file_download_request)
+	};
+	send_data(client_socket, (void *)&file_download_request,
+			  file_download_request_label);
+
+	message_label label;
+	do
+	{
+		read(client_socket, (void*)&label, sizeof(label));
+	} while (label.message_type != msg_download_info);
+
+    Download_Info download_info;
+    read(client_socket,(void*)&download_info,sizeof(download_info));
 
 	printf("---File download started!---\n");
+    for(int i=0;i<download_info.number_of_packets;i++)
+    {
+	    message_label label;
+        Download_Packet packet;
 
-	sleep(5);
+        while(label.message_type != msg_download_packet)
+        {
+            read(client_socket,(void*)&packet,sizeof(label));
+        }
+
+        read(client_socket,(void*)&packet,sizeof(packet));
+        if(packet.packet_number == i)
+			printf("Received packet %d/%d",i,download_info.number_of_packets);
+		FILE *file = fopen(download_info.filename,"a");
+		fprintf(file,"%s",packet.data);
+    }
 	printf("---File received!---\n");
 }
 
@@ -72,8 +107,8 @@ void server_handle_IO()
 {
 	while (user_equipment.battery.is_battery_drained() == false)
 	{
-        server_listen_respond();
-        server_send_requests();
+		server_listen_respond();
+		server_send_requests();
 
 		user_equipment.is_sleeping = true;
 		printf("---Device goes to sleep.---\n");
@@ -83,6 +118,6 @@ void server_handle_IO()
 		user_equipment.is_sleeping = false;
 		sleep(1);
 	}
-    
+
 	printf("Listening stopped.\n");
 }
