@@ -10,7 +10,9 @@ typedef enum Message_Type
 	msg_ping_request,
 	msg_ping_response,
 	msg_ue_shutdown,
-	msg_drx_config
+	msg_drx_config,
+	msg_request_download,
+	msg_download_info
 } Message_Type;
 
 typedef struct message_label

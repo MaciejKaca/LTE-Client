@@ -3,7 +3,7 @@
 #include "Headers/lte_attach.h"
 #include "Headers/preambles.h"
 #include "Headers/user_equipment.h"
-#include "Headers/listen_to_server.h"
+#include "Headers/server_handling.h"
 #include "Headers/threading.h"
 #include <pthread.h>
 
