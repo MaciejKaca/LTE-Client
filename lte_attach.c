@@ -16,6 +16,7 @@ int C_RNTI;
 RandomAccessPreamble create_input_preamble()
 {
 	RandomAccessPreamble rap;
+	memset(&rap, 0, sizeof(RandomAccessPreamble));
 	rap.cyclic_prefix = ' ';
 
 	int frequency = rand() % 64;
@@ -53,6 +54,8 @@ void perform_random_access_procedure()
 
 	RandomAccessResponse output_preamble;
 	message_label output_preamble_label;
+	memset(&output_preamble, 0, sizeof(RandomAccessResponse));
+	memset(&output_preamble_label, 0, sizeof(message_label));
 
 	recive_data_blocking(client_socket, (void *)&output_preamble,
 						 &output_preamble_label);
@@ -71,6 +74,7 @@ void perform_random_access_procedure()
 RRC_Connection_Request create_rrc_c_request()
 {
 	RRC_Connection_Request rrc_c_request;
+	memset(&rrc_c_request, 0, sizeof(RRC_Connection_Request));
 
 	strncpy(rrc_c_request.rnti_type, "C-RNTI", 8);
 	rrc_c_request.c_rnti = C_RNTI;
@@ -84,6 +88,7 @@ RRC_Connection_Request create_rrc_c_request()
 RRC_Connection_Setup_Complete create_rrc_c_setup_complete()
 {
 	RRC_Connection_Setup_Complete rrc_c_setup_complete;
+	memset(&rrc_c_setup_complete, 0, sizeof(RRC_Connection_Setup_Complete));
 
 	strncpy(rrc_c_setup_complete.plmn, user_equipment.plmn, 7);
 	strcpy(rrc_c_setup_complete.dedicated_info_nas, "C1332BCCAD1231BAFF21");
@@ -105,6 +110,8 @@ void rrc_connection_setup()
 
 	RRC_connection_Setup rrc_c_setup;
 	message_label rrc_c_setup_label;
+	memset(&rrc_c_setup, 0, sizeof(RRC_connection_Setup));
+	memset(&rrc_c_request_label, 0, sizeof(message_label));
 
 	recive_data_blocking(client_socket, (void *)&rrc_c_setup,
 						 &rrc_c_setup_label);
@@ -130,6 +137,7 @@ void rrc_connection_setup()
 DRX_Config create_drx_config()
 {
 	DRX_Config drx_config;
+	memset(&drx_config, 0, sizeof(DRX_Config));
 
 	drx_config.on_duration_timer = on_duration_timer_e_psf2;
 	drx_config.drx_inactivity_timer = drx_inactivity_e_psf8;

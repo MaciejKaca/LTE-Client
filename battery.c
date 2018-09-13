@@ -49,6 +49,8 @@ bool is_battery_drained() { return (user_equipment.battery.charge == 0); }
 
 void create_battery()
 {
+	memset(&user_equipment.battery, 0, sizeof(Battery));
+
 	user_equipment.battery.charge = 100;
 	user_equipment.battery.battery_drain = (void *)battery_drain;
 	user_equipment.battery.battery_drain_start = (void *)battery_drain_start;

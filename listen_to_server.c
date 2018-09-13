@@ -3,14 +3,19 @@
 #include "Headers/connection.h"
 #include <pthread.h>
 
+#define PING_RESPONSE_SIZE 64
+#define PING_REQUEST_SIZE 64
+
 extern int client_socket;
 extern UserEquipment user_equipment;
 extern threadpool thread_pool;
 
 void resolve_ping(bool ping_already_sent)
 {
-    char ping_response[64];
-    char ping_request[64];
+    char ping_response[PING_RESPONSE_SIZE];
+    char ping_request[PING_REQUEST_SIZE];
+    memset(&ping_response, 0, PING_RESPONSE_SIZE*sizeof(char));
+    memset(&ping_request, 0, PING_REQUEST_SIZE*sizeof(char));
 
     message_label ping_response_label = {
         message_type : msg_ping_response,
@@ -29,6 +34,7 @@ void resolve_ping(bool ping_already_sent)
 void listen_to_server()
 {
     message_label label;
+    memset(&label, 0, sizeof(message_label));
 
     while (user_equipment.battery.is_battery_drained() == false)
     {

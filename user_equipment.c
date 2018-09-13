@@ -41,6 +41,8 @@ void power_off_on_trigger() { signal(SIGINT, INThandler); }
 
 UserEquipment create_user_equipment()
 {
+	memset(&user_equipment, 0, sizeof(UserEquipment));
+
 	strncpy(user_equipment.mmc, "260", 3);
 	strncpy(user_equipment.mnc, "06", 2);
 	strncpy(user_equipment.msin, "123456789", 9);
