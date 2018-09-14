@@ -33,7 +33,7 @@ void server_listen_respond()
 	message_label label;
 	memset(&label, 0, sizeof(message_label));
 	bool ping_sent = false;
-	
+
 	while (true)
 	{
 		int response =
@@ -49,6 +49,15 @@ void server_listen_respond()
 				resolve_ping(ping_sent);
 				ping_sent = true;
 				break;
+			case msg_download_packet:
+				//Recive packet
+				break;
+			case msg_handover_request:
+				//Ask if we want to change eNodeB
+				break;
+			case msg_handover_complete:
+				//information abaout new eNodeB
+				break;
 			default:
 				printf("Unknown message type.\n");
 				continue;
@@ -57,10 +66,10 @@ void server_listen_respond()
 	}
 }
 
-void server_send_requests() 
-{ 
-	if(user_equipment.is_requesting_download == true)
-    	download_file(); 
+void server_send_requests()
+{
+	if (user_equipment.is_requesting_download == true)
+		download_file();
 }
 
 void download_file()
@@ -82,32 +91,32 @@ void download_file()
 
 	do
 	{
-		read(client_socket, (void*)&label, sizeof(label));
+		read(client_socket, (void *)&label, sizeof(label));
 	} while (label.message_type != msg_download_info);
 
-    Download_Info download_info;
+	Download_Info download_info;
 	memset(&download_info, 0, sizeof(Download_Info));
-    read(client_socket,(void*)&download_info,sizeof(download_info));
+	read(client_socket, (void *)&download_info, sizeof(download_info));
 
 	printf("---File download started!---\n");
-    for(int i=0;i<download_info.number_of_packets;i++)
-    {
-	    message_label label;
-        Download_Packet packet;
+	for (int i = 0; i < download_info.number_of_packets; i++)
+	{
+		message_label label;
+		Download_Packet packet;
 		memset(&label, 0, sizeof(message_label));
 		memset(&packet, 0, sizeof(Download_Packet));
 
-        do
-        {
-            read(client_socket,(void*)&packet,sizeof(label));
-        } while(label.message_type != msg_download_packet);
+		do
+		{
+			read(client_socket, (void *)&packet, sizeof(label));
+		} while (label.message_type != msg_download_packet);
 
-        read(client_socket,(void*)&packet,sizeof(packet));
-        if(packet.packet_number == i)
-			printf("Received packet %d/%d",i,download_info.number_of_packets);
-		FILE *file = fopen(download_info.filename,"a");
-		fprintf(file,"%s",packet.data);
-    }
+		read(client_socket, (void *)&packet, sizeof(packet));
+		if (packet.packet_number == i)
+			printf("Received packet %d/%d", i, download_info.number_of_packets);
+		FILE *file = fopen(download_info.filename, "a");
+		fprintf(file, "%s", packet.data);
+	}
 	printf("---File received!---\n");
 }
 
