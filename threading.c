@@ -1,6 +1,6 @@
 #include "Headers/threading.h"
 
-#define THREADS_NUM 2
+#define THREADS_NUM 3
 
 extern UserEquipment user_equipment;
 threadpool thread_pool;

@@ -11,6 +11,7 @@ typedef struct UserEquipment
 	char imsi[16]; // International Mobile Subscriber Identity
 	char plmn[8];
 	bool is_sleeping;
+	bool is_requesting_download;
 	void (*power_off_on_trigger)();
 	Battery battery;
 } UserEquipment;

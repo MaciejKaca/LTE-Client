@@ -59,7 +59,8 @@ void server_listen_respond()
 
 void server_send_requests() 
 { 
-    download_file(); 
+	if(user_equipment.is_requesting_download == true)
+    	download_file(); 
 }
 
 void download_file()
@@ -115,7 +116,7 @@ void server_handle_IO()
 	while (user_equipment.battery.is_battery_drained() == false)
 	{
 		server_listen_respond();
-		//server_send_requests();
+		server_send_requests();
 
 		user_equipment.is_sleeping = true;
 		printf("---Device goes to sleep.---\n");
