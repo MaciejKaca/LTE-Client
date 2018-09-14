@@ -14,6 +14,9 @@ void resolve_ping(bool ping_already_sent)
 	char ping_response[64];
 	char ping_request[64];
 
+	memset(&ping_response, 0, 64*sizeof(char));
+	memset(&ping_request, 0, 64*sizeof(char));
+
 	message_label ping_response_label = {
 		message_type : msg_ping_response,
 		message_length : sizeof(ping_response)
