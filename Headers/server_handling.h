@@ -1,6 +1,6 @@
 #include "common.h"
 
-void resolve_ping(bool ping_already_sent);
+void resolve_ping();
 
 void server_listen_respond();
 

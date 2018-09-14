@@ -9,33 +9,71 @@ extern UserEquipment user_equipment;
 extern threadpool thread_pool;
 extern int C_RNTI;
 
-void resolve_ping(bool ping_already_sent)
+Download_Info download_info;
+int packet_number = 0;
+
+void print_received_data_type(char message[])
+{
+	printf("------------------------------------------\n");
+	printf("RECEIVED MESSAGE\n");
+	printf("Type: %s\n", message);
+	printf("------------------------------------------\n");
+}
+
+void print_sent_data_type(char message[])
+{
+	printf("------------------------------------------\n");
+	printf("SENT MESSAGE\n");
+	printf("Type: %s\n", message);
+	printf("------------------------------------------\n");
+}
+
+void resolve_ping()
 {
 	char ping_response[64];
-	char ping_request[64];
 
 	memset(&ping_response, 0, 64*sizeof(char));
-	memset(&ping_request, 0, 64*sizeof(char));
 
 	message_label ping_response_label = {
 		message_type : msg_ping_response,
 		message_length : sizeof(ping_response)
 	};
 
-	read(client_socket, (void *)ping_request, sizeof(ping_request));
+	send_data(client_socket, (void *)&ping_response, ping_response_label);
+}
+
+void resolve_download_info()
+{
+	memset(&download_info, 0, sizeof(Download_Info));	
+	read(client_socket, (void *)&download_info, sizeof(download_info));
+
 	printf("------------------------------------------\n");
-	printf("RECEIVED MESSAGE\n");
-	printf("Type: msg_ping_request\n");
+	printf("DOWNLOAD INFO\n");
+	printf("Filename: %s\n", download_info.filename);
+	printf("Download ID: %d\n", download_info.error_number);
+	printf("Number of packets: %d\n", download_info.number_of_packets);
 	printf("------------------------------------------\n");
-	if (!ping_already_sent)
-		send_data(client_socket, (void *)&ping_response, ping_response_label);
+}
+
+void resolve_packet()
+{
+	Download_Packet packet;
+	memset(&packet, 0, sizeof(Download_Packet));
+
+	read(client_socket, (void *)&packet, sizeof(packet));
+
+	packet_number++;
+
+	printf("Received packet %d/%d\n", packet_number, download_info.number_of_packets);
+
+	FILE *file = fopen(download_info.filename, "a");
+	fprintf(file, "%s", packet.data);
 }
 
 void server_listen_respond()
 {
 	message_label label;
 	memset(&label, 0, sizeof(message_label));
-	bool ping_sent = false;
 
 	while (true)
 	{
@@ -49,35 +87,30 @@ void server_listen_respond()
 			switch (label.message_type)
 			{
 			case msg_ping_request:
-				resolve_ping(ping_sent);
-				ping_sent = true;
+				print_received_data_type("msg_ping_request");
+				resolve_ping();
 				break;
+			case msg_download_info:
+				print_received_data_type("msg_download_info");
+				resolve_download_info();
 			case msg_download_packet:
-				//Recive packet
+				print_received_data_type("msg_download_packet");
+				resolve_packet();
 				break;
 			case msg_handover_request:
-				//Ask if we want to change eNodeB
-				break;
-			case msg_handover_complete:
-				//information abaout new eNodeB
+				print_received_data_type("msg_handover_request");
 				break;
 			default:
-				printf("Unknown message type.\n");
+				//printf("Unknown message type.\n");
 				continue;
 			}
 		}
 	}
 }
 
-void server_send_requests()
+void request_file_download()
 {
-	if (user_equipment.is_requesting_download == true)
-		download_file();
-}
-
-void download_file()
-{
-	printf("---Sending request for file download.---\n");
+	print_sent_data_type("msg_download_request");
 	Download_Request file_download_request = {
 		filename : "file.txt",
 		client_C_RNTI : C_RNTI
@@ -89,38 +122,13 @@ void download_file()
 	send_data(client_socket, (void *)&file_download_request,
 			  file_download_request_label);
 
-	message_label label;
-	memset(&label, 0, sizeof(message_label));
+	user_equipment.is_requesting_download = false;
+}
 
-	do
-	{
-		read(client_socket, (void *)&label, sizeof(label));
-	} while (label.message_type != msg_download_info);
-
-	Download_Info download_info;
-	memset(&download_info, 0, sizeof(Download_Info));
-	read(client_socket, (void *)&download_info, sizeof(download_info));
-
-	printf("---File download started!---\n");
-	for (int i = 0; i < download_info.number_of_packets; i++)
-	{
-		message_label label;
-		Download_Packet packet;
-		memset(&label, 0, sizeof(message_label));
-		memset(&packet, 0, sizeof(Download_Packet));
-
-		do
-		{
-			read(client_socket, (void *)&packet, sizeof(label));
-		} while (label.message_type != msg_download_packet);
-
-		read(client_socket, (void *)&packet, sizeof(packet));
-		if (packet.packet_number == i)
-			printf("Received packet %d/%d", i, download_info.number_of_packets);
-		FILE *file = fopen(download_info.filename, "a");
-		fprintf(file, "%s", packet.data);
-	}
-	printf("---File received!---\n");
+void server_send_requests()
+{
+	if (user_equipment.is_requesting_download == true)
+		request_file_download();
 }
 
 void server_handle_IO()
@@ -131,9 +139,9 @@ void server_handle_IO()
 		server_send_requests();
 
 		user_equipment.is_sleeping = true;
-		printf("---Device goes to sleep.---\n");
+		//printf("---Device goes to sleep.---\n");
 		sleep(4);
-		printf("\n---Device wakes up!---\n");
+		//printf("\n---Device wakes up!---\n");
 		usleep(100000);
 		user_equipment.is_sleeping = false;
 		sleep(1);
