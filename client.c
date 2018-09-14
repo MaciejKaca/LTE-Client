@@ -5,6 +5,7 @@
 #include "Headers/user_equipment.h"
 #include "Headers/server_handling.h"
 #include "Headers/threading.h"
+#include "Headers/detect_button.h"
 #include <pthread.h>
 
 int client_socket;
