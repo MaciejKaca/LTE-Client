@@ -8,6 +8,7 @@ extern int client_socket;
 extern UserEquipment user_equipment;
 extern threadpool thread_pool;
 extern int C_RNTI;
+bool handover_response = false;
 
 void print_received_data_type(char message[])
 {
@@ -27,17 +28,34 @@ void print_sent_data_type(char message[])
 
 void resolve_ping()
 {
+	char ping_request[64];
+	memset(&ping_request, 0, 64 * sizeof(char));
+
+	read(client_socket, ping_request, 64 * sizeof(char));
+
 	char ping_response[64];
 
-	memset(&ping_response, 0, 64*sizeof(char));
-
+	memset(&ping_response, 0, 64 * sizeof(char));
 
 	message_label ping_response_label = {
 		message_type : msg_ping_response,
 		message_length : sizeof(ping_response)
 	};
 
-	send_data(client_socket, (void *)&ping_response, ping_response_label);
+	send_data(client_socket, (void *)ping_response, ping_response_label);
+}
+
+void resolve_handover_response()
+{
+	//Ask tristan about if they are sending anything in handover
+
+	message_label handover_response_label = {
+		message_type : msg_handover_request,
+		message_length : sizeof(handover_response)
+	};
+
+	send_data(client_socket, (void *)handover_response, handover_response_label);
+	handover_response = false;
 }
 
 void server_listen_respond()
@@ -70,6 +88,7 @@ void server_listen_respond()
 				break;
 			case msg_handover_request:
 				print_received_data_type("msg_handover_request");
+				resolve_handover_response();
 				break;
 			default:
 				//printf("Unknown message type.\n");
