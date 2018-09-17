@@ -10,7 +10,6 @@ extern threadpool thread_pool;
 extern int C_RNTI;
 
 Download_Info download_info;
-int packet_number = 0;
 
 void print_received_data_type(char message[])
 {
@@ -62,12 +61,12 @@ void resolve_packet()
 
 	read(client_socket, (void *)&packet, sizeof(packet));
 
-	packet_number++;
-
-	printf("Received packet %d/%d\n", packet_number, download_info.number_of_packets);
+	printf("Received packet %d/%d\n", ++packet.packet_number, download_info.number_of_packets);
+	printf("Data: %s\n", packet.data);
 
 	FILE *file = fopen(download_info.filename, "a");
 	fprintf(file, "%s", packet.data);
+	fflush(file);
 }
 
 void server_listen_respond()
