@@ -63,6 +63,7 @@ void server_listen_respond()
 			case msg_download_info:
 				print_received_data_type("msg_download_info");
 				resolve_download_info();
+				break;
 			case msg_download_packet:
 				print_received_data_type("msg_download_packet");
 				resolve_packet();
