@@ -33,6 +33,7 @@ void resolve_ping()
 
 	memset(&ping_response, 0, 64*sizeof(char));
 
+
 	message_label ping_response_label = {
 		message_type : msg_ping_response,
 		message_length : sizeof(ping_response)
@@ -62,10 +63,10 @@ void resolve_packet()
 	read(client_socket, (void *)&packet, sizeof(packet));
 
 	printf("Received packet %d/%d\n", ++packet.packet_number, download_info.number_of_packets);
-	printf("Data: %s\n", packet.data);
+	printf("Data: %.*s\n",packet.data_size, packet.data);
 
 	FILE *file = fopen(download_info.filename, "a");
-	fprintf(file, "%s", packet.data);
+	fprintf(file, "%.*s",packet.data_size, packet.data);
 	fflush(file);
 }
 
@@ -122,6 +123,7 @@ void request_file_download()
 			  file_download_request_label);
 
 	user_equipment.is_requesting_download = false;
+	FILE *file = fopen(download_info.filename, "w");
 }
 
 void server_send_requests()
