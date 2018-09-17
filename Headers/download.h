@@ -1,5 +1,10 @@
 #pragma once
 
+#include "common.h"
+#include "user_equipment.h"
+#include "server_handling.h"
+#include "connection.h"
+
 #define ERR_DOWNLOAD_NO_ERRORS 0
 #define ERR_DOWNLOAD_FILE_NOT_FOUND -1
 #define DOWNLOAD_PACKET_SIZE 16
@@ -23,3 +28,9 @@ typedef struct Download_Packet
     char data[DOWNLOAD_PACKET_SIZE];
     int data_size;
 } Download_Packet;
+
+void request_file_download();
+
+void resolve_download_info();
+
+void resolve_packet();
