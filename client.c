@@ -15,10 +15,13 @@ bool test_mode = false;
 int main(int argc, char *argv[])
 {
 	srand((unsigned)time(NULL));
-	if (argc == 3)
+	if (argc < 3)
 		error("Not enough arguments passed!");
 	else if (argc == 4)
+	{
+		printf("Started programm in test mode\n");
 		test_mode = argv[3];
+	}
 
 	char *server_address = argv[1];
 	int port = atoi(argv[2]);
