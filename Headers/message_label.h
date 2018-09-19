@@ -15,7 +15,8 @@ typedef enum Message_Type
 	msg_request_download,
 	msg_download_info,
 	msg_download_packet,
-	msg_handover_request
+	msg_handover_request,
+	msg_handover_response
 } Message_Type;
 
 typedef struct message_label

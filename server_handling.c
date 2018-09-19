@@ -2,13 +2,13 @@
 #include "Headers/connection.h"
 #include "Headers/download.h"
 #include "Headers/user_equipment.h"
+#include "Headers/handover.h"
 #include <pthread.h>
 
 extern int client_socket;
 extern UserEquipment user_equipment;
 extern threadpool thread_pool;
 extern int C_RNTI;
-bool handover_response = false;
 
 void print_received_data_type(char message[])
 {
@@ -45,17 +45,11 @@ void resolve_ping()
 	send_data(client_socket, (void *)ping_response, ping_response_label);
 }
 
-void resolve_handover_response()
+void resolve_handover_response(int size_of_structure)
 {
-	//Ask tristan about if they are sending anything in handover
+	X2_Server_Info new_enodeb;
 
-	message_label handover_response_label = {
-		message_type : msg_handover_request,
-		message_length : sizeof(handover_response)
-	};
-
-	send_data(client_socket, (void *)handover_response, handover_response_label);
-	handover_response = false;
+	read(client_socket, (void *)&new_enodeb, size_of_structure);
 }
 
 void server_listen_respond()
@@ -86,9 +80,9 @@ void server_listen_respond()
 				print_received_data_type("msg_download_packet");
 				resolve_packet();
 				break;
-			case msg_handover_request:
-				print_received_data_type("msg_handover_request");
-				resolve_handover_response();
+			case msg_handover_response:
+				print_received_data_type("msg_handover_response");
+				resolve_handover_response(label.message_length);
 				break;
 			default:
 				//printf("Unknown message type.\n");
