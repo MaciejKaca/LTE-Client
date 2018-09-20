@@ -38,6 +38,7 @@ void battery_drain()
 		}
 	}
 	printf("Battery drained. I hope you're proud of yourself.\n");
+	exit(0);
 }
 
 void battery_drain_start()
