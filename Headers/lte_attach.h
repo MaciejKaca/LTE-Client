@@ -3,6 +3,7 @@
 #include "common.h"
 #include "preambles.h"
 #include "rrc_connection.h"
+#include "drx_config.h"
 
 RandomAccessPreamble create_input_preamble();
 
@@ -16,5 +17,11 @@ RRC_Connection_Request create_rrc_c_request();
 RRC_Connection_Setup_Complete create_rrc_c_setup_complete();
 
 void rrc_connection_setup();
+
+void receive_backup_server_info();
+
+DRX_Config create_drx_config();
+
+void drx_config_setup();
 
 void lte_attach();

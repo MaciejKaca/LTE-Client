@@ -45,11 +45,20 @@ void resolve_ping()
 	send_data(client_socket, (void *)ping_response, ping_response_label);
 }
 
-void resolve_handover_response(int size_of_structure)
+void resolve_handover_control()
 {
-	X2_Server_Info new_enodeb;
+	read(client_socket, malloc(1), sizeof(byte));
 
-	read(client_socket, (void *)&new_enodeb, size_of_structure);
+	message_label measurment_report_label = {
+		message_type : msg_handover_measurment_report,
+		message_length : sizeof(user_equipment.signal_strength)
+	};
+	send_data(client_socket,&user_equipment.signal_strength,measurment_report_label);
+}
+
+void resolve_handover_response()
+{
+
 }
 
 void server_listen_respond()
@@ -80,12 +89,16 @@ void server_listen_respond()
 				print_received_data_type("msg_download_packet");
 				resolve_packet();
 				break;
+			case msg_handover_measurment_control:
+				print_received_data_type("msg_handover_measurment_control");
+				resolve_handover_control();
+				break;
 			case msg_handover_response:
-				print_received_data_type("msg_handover_response");
-				resolve_handover_response(label.message_length);
+				print_received_data_type("msg_handover_measurment_control");
+				resolve_handover_response();
 				break;
 			default:
-				//printf("Unknown message type.\n");
+				printf("Unknown message type. ID=%d\n", label.message_type);
 				continue;
 			}
 		}

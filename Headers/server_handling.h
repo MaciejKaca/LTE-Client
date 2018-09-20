@@ -10,6 +10,10 @@ void server_listen_respond();
 
 void server_send_requests();
 
+void resolve_handover_control();
+
+void resolve_handover_response();
+
 void download_file();
 
 void server_handle_IO();
