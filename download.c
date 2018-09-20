@@ -25,7 +25,7 @@ void request_file_download()
 
 void resolve_download_info()
 {
-	memset(&download_info, 0, sizeof(Download_Info));	
+	memset(&download_info, 0, sizeof(Download_Info));
 	read(client_socket, (void *)&download_info, sizeof(download_info));
 
 	printf("------------------------------------------\n");
@@ -43,10 +43,11 @@ void resolve_packet()
 
 	read(client_socket, (void *)&packet, sizeof(packet));
 
-	printf("Received packet %d/%d\n", ++packet.packet_number, download_info.number_of_packets);
-	printf("Data: %.*s\n",packet.data_size, packet.data);
+	printf("Received packet %d/%d\n", ++packet.packet_number,
+		   download_info.number_of_packets);
+	printf("Data: %.*s\n", packet.data_size, packet.data);
 
 	FILE *file = fopen(download_info.filename, "a");
-	fprintf(file, "%.*s",packet.data_size, packet.data);
+	fprintf(file, "%.*s", packet.data_size, packet.data);
 	fflush(file);
 }

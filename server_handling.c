@@ -1,8 +1,8 @@
 #include "Headers/server_handling.h"
 #include "Headers/connection.h"
 #include "Headers/download.h"
-#include "Headers/user_equipment.h"
 #include "Headers/handover.h"
+#include "Headers/user_equipment.h"
 #include <pthread.h>
 
 extern int client_socket;
@@ -53,13 +53,11 @@ void resolve_handover_control()
 		message_type : msg_handover_measurment_report,
 		message_length : sizeof(user_equipment.signal_strength)
 	};
-	send_data(client_socket,&user_equipment.signal_strength,measurment_report_label);
+	send_data(client_socket, &user_equipment.signal_strength,
+			  measurment_report_label);
 }
 
-void resolve_handover_response()
-{
-
-}
+void resolve_handover_response() {}
 
 void server_listen_respond()
 {
@@ -119,9 +117,9 @@ void server_handle_IO()
 		server_send_requests();
 
 		user_equipment.is_sleeping = true;
-		//printf("---Device goes to sleep.---\n");
+		// printf("---Device goes to sleep.---\n");
 		sleep(4);
-		//printf("\n---Device wakes up!---\n");
+		// printf("\n---Device wakes up!---\n");
 		usleep(100000);
 		user_equipment.is_sleeping = false;
 		sleep(1);

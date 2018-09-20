@@ -57,7 +57,7 @@ UserEquipment create_user_equipment()
 	user_equipment.is_sleeping = false;
 	user_equipment.signal_strength = 100;
 
-	if(test_mode == true)
+	if (test_mode == true)
 		user_equipment.is_requesting_download = true;
 
 	create_battery();

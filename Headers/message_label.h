@@ -19,9 +19,9 @@ typedef enum Message_Type
 	msg_handover_measurment_report,
 	msg_handover_response,
 	msg_x2_other_server_info,
-    msg_x2_recive_client_info,
-    msg_x2_server_connection_request,
-    msg_x2_server_connection_response
+	msg_x2_recive_client_info,
+	msg_x2_server_connection_request,
+	msg_x2_server_connection_response
 } Message_Type;
 
 typedef struct message_label

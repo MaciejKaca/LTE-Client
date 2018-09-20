@@ -1,8 +1,8 @@
 #include "Headers/battery.h"
 #include "Headers/common.h"
-#include "Headers/user_equipment.h"
 #include "Headers/connection.h"
 #include "Headers/message_label.h"
+#include "Headers/user_equipment.h"
 #include <pthread.h>
 
 extern UserEquipment user_equipment;
@@ -34,7 +34,8 @@ void battery_drain()
 			};
 
 			battery_critical_sended = true;
-			send_data(client_socket, (void *)battery_critical_text, battery_critical_label);
+			send_data(client_socket, (void *)battery_critical_text,
+					  battery_critical_label);
 		}
 	}
 	printf("Battery drained. I hope you're proud of yourself.\n");
