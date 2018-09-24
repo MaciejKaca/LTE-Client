@@ -1,21 +1,26 @@
 #include "Headers/lte_attach.h"
 #include "Headers/connection.h"
 #include "Headers/drx_config.h"
+#include "Headers/handover.h"
 #include "Headers/preambles.h"
 #include "Headers/rrc_connection.h"
 #include "Headers/user_equipment.h"
 
 #include <pthread.h>
 
+#define NAS_INFO "C1332BCCAD1231BAFF21"
+
 extern int client_socket;
 extern UserEquipment user_equipment;
 extern threadpool thread_pool;
 
 int C_RNTI;
+X2_Server_Info backup_server_info;
 
 RandomAccessPreamble create_input_preamble()
 {
 	RandomAccessPreamble rap;
+	memset(&rap, 0, sizeof(RandomAccessPreamble));
 	rap.cyclic_prefix = ' ';
 
 	int frequency = rand() % 64;
@@ -53,9 +58,11 @@ void perform_random_access_procedure()
 
 	RandomAccessResponse output_preamble;
 	message_label output_preamble_label;
+	memset(&output_preamble, 0, sizeof(RandomAccessResponse));
+	memset(&output_preamble_label, 0, sizeof(message_label));
 
-	receive_data_blocking(client_socket, (void *)&output_preamble,
-						  &output_preamble_label);
+	recive_data_blocking(client_socket, (void *)&output_preamble,
+						 &output_preamble_label);
 
 	printf("Random Acces Procedure succeded.\n");
 	printf("---\n");
@@ -71,6 +78,7 @@ void perform_random_access_procedure()
 RRC_Connection_Request create_rrc_c_request()
 {
 	RRC_Connection_Request rrc_c_request;
+	memset(&rrc_c_request, 0, sizeof(RRC_Connection_Request));
 
 	strncpy(rrc_c_request.rnti_type, "C-RNTI", 8);
 	rrc_c_request.c_rnti = C_RNTI;
@@ -84,9 +92,10 @@ RRC_Connection_Request create_rrc_c_request()
 RRC_Connection_Setup_Complete create_rrc_c_setup_complete()
 {
 	RRC_Connection_Setup_Complete rrc_c_setup_complete;
+	memset(&rrc_c_setup_complete, 0, sizeof(RRC_Connection_Setup_Complete));
 
 	strncpy(rrc_c_setup_complete.plmn, user_equipment.plmn, 7);
-	strcpy(rrc_c_setup_complete.dedicated_info_nas, "C1332BCCAD1231BAFF21");
+	strcpy(rrc_c_setup_complete.dedicated_info_nas, NAS_INFO);
 
 	return rrc_c_setup_complete;
 }
@@ -105,9 +114,11 @@ void rrc_connection_setup()
 
 	RRC_connection_Setup rrc_c_setup;
 	message_label rrc_c_setup_label;
+	memset(&rrc_c_setup, 0, sizeof(RRC_connection_Setup));
+	memset(&rrc_c_request_label, 0, sizeof(message_label));
 
-	receive_data_blocking(client_socket, (void *)&rrc_c_setup,
-						  &rrc_c_setup_label);
+	recive_data_blocking(client_socket, (void *)&rrc_c_setup,
+						 &rrc_c_setup_label);
 
 	printf("C-RNTI: %d\n", rrc_c_setup.c_rnti);
 	printf("PHR Config: %d\n", rrc_c_setup.phr_config.periodic_PHR_Timer);
@@ -130,6 +141,7 @@ void rrc_connection_setup()
 DRX_Config create_drx_config()
 {
 	DRX_Config drx_config;
+	memset(&drx_config, 0, sizeof(DRX_Config));
 
 	drx_config.on_duration_timer = on_duration_timer_e_psf2;
 	drx_config.drx_inactivity_timer = drx_inactivity_e_psf8;
@@ -155,77 +167,6 @@ void drx_config_setup()
 	printf("Sending DRX config.\n");
 	send_data(client_socket, (void *)&drx_config, drx_config_label);
 	printf("Sent DRX Config.\n");
-}
-
-void resolve_ping(bool ping_already_sent)
-{
-	char ping_response[64];
-	char ping_request[64];
-
-	message_label ping_response_label = {
-		message_type : msg_ping_response,
-		message_length : sizeof(ping_response)
-	};
-
-	read(client_socket, (void *)ping_request, sizeof(ping_request));
-	printf("------------------------------------------\n");
-	printf("RECEIVED MESSAGE\n");
-	printf("Type: msg_ping_request\n");
-	printf("------------------------------------------\n");
-	if (!ping_already_sent)
-		send_data(client_socket, (void *)&ping_response, ping_response_label);
-}
-
-void listen_to_server()
-{
-	message_label label;
-
-	while (user_equipment.battery.is_battery_drained() == false)
-	{
-		if (user_equipment.battery.is_battery_critical() == true)
-			printf("Battery is low!\n");
-
-		bool ping_sent = false;
-		while (true)
-		{
-			int response =
-				read(client_socket, (void *)&label, sizeof(message_label));
-			if (response < 0)
-				break;
-
-			usleep(50000);
-			if (response == sizeof(message_label))
-			{
-				switch (label.message_type)
-				{
-				case msg_ping_request:
-					resolve_ping(ping_sent);
-					ping_sent = true;
-					break;
-				default:
-					printf("Unknown message type.\n");
-					continue;
-				}
-			}
-		}
-
-		user_equipment.is_sleeping = true;
-		printf("---Device goes to sleep.---\n");
-		sleep(4);
-		printf("\n---Device wakes up!---\n");
-		usleep(100000);
-		user_equipment.is_sleeping = false;
-		sleep(1);
-	}
-
-	printf("Listening stopped.\n");
-}
-
-void start_server_listening_thread()
-{
-	printf("---\n");
-	printf("Started: Listening\n");
-	thpool_add_work(thread_pool, (void *)listen_to_server, NULL);
 }
 
 void lte_attach()

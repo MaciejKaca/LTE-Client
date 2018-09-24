@@ -11,3 +11,6 @@ error.o
 lte_attach.o
 lte_client
 valgrind-out.txt
+find.sh
+.valgrind-out.txt.swp
+file.txt

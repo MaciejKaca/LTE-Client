@@ -4,9 +4,14 @@
 #include <signal.h>
 #include <unistd.h>
 
+#define MMC "260"
+#define MNC "06"
+#define MSIN "123456789"
+
 extern UserEquipment user_equipment;
 extern threadpool thread_pool;
 extern int client_socket;
+extern bool test_mode;
 
 void INThandler(int sig)
 {
@@ -41,13 +46,19 @@ void power_off_on_trigger() { signal(SIGINT, INThandler); }
 
 UserEquipment create_user_equipment()
 {
-	strncpy(user_equipment.mmc, "260", 3);
-	strncpy(user_equipment.mnc, "06", 2);
-	strncpy(user_equipment.msin, "123456789", 9);
+	memset(&user_equipment, 0, sizeof(UserEquipment));
+
+	strncpy(user_equipment.mmc, MMC, 3);
+	strncpy(user_equipment.mnc, MNC, 2);
+	strncpy(user_equipment.msin, MSIN, 9);
 	user_equipment.power_off_on_trigger = power_off_on_trigger;
 	create_user_equipment_plmn();
 	create_user_equipment_imsi();
 	user_equipment.is_sleeping = false;
+	user_equipment.signal_strength = 100;
+
+	if (test_mode == true)
+		user_equipment.is_requesting_download = true;
 
 	create_battery();
 }

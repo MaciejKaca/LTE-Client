@@ -67,7 +67,7 @@ int read_data_blocking(int socket, void *data, int data_size)
 	return result;
 }
 
-int receive_data_blocking(int socket, void *data, message_label *label)
+int recive_data_blocking(int socket, void *data, message_label *label)
 {
 	int result;
 	while (true)
@@ -87,8 +87,11 @@ int receive_data_blocking(int socket, void *data, message_label *label)
 			case msg_rrc_connection_setup:
 				return read_data_blocking(socket, data, label->message_length);
 				break;
+			case msg_handover_client_reconnection_info:
+				return read_data_blocking(socket, data, label->message_length);
+				break;
 			default:
-				printf("Unknown message type.\n");
+				printf("Unknown message type. ID=%d\n", label->message_type);
 				continue;
 				break;
 			}
