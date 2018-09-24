@@ -87,7 +87,7 @@ int recive_data_blocking(int socket, void *data, message_label *label)
 			case msg_rrc_connection_setup:
 				return read_data_blocking(socket, data, label->message_length);
 				break;
-			case msg_x2_other_server_info:
+			case msg_handover_client_reconnection_info:
 				return read_data_blocking(socket, data, label->message_length);
 				break;
 			default:

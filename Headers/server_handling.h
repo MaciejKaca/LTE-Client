@@ -1,3 +1,5 @@
+#pragma once
+
 #include "common.h"
 
 void print_received_data_type(char message[]);

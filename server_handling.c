@@ -45,34 +45,6 @@ void resolve_ping()
 	send_data(client_socket, (void *)ping_response, ping_response_label);
 }
 
-void resolve_backup_server_info()
-{
-	read(client_socket, (void *)&user_equipment.backup_server_info,
-		 sizeof(user_equipment.backup_server_info));
-	char backup_server_ip[4];
-	strncpy(backup_server_ip, user_equipment.backup_server_info.address, 4);
-
-	printf("Backup server received: %d.%d.%d.%d:%d\n", backup_server_ip[0],
-		   backup_server_ip[1], backup_server_ip[2], backup_server_ip[3],
-		   user_equipment.backup_server_info.eNodeB_port);
-}
-
-void resolve_handover_control()
-{
-	void *trash_buffer = malloc(1);
-	read(client_socket, trash_buffer, sizeof(byte));
-	free(trash_buffer);
-
-	message_label measurment_report_label = {
-		message_type : msg_handover_measurment_report,
-		message_length : sizeof(user_equipment.signal_strength)
-	};
-	send_data(client_socket, &user_equipment.signal_strength,
-			  measurment_report_label);
-}
-
-void resolve_handover_start() {}
-
 void server_listen_respond()
 {
 	message_label label;
@@ -82,9 +54,10 @@ void server_listen_respond()
 	{
 		int response =
 			read(client_socket, (void *)&label, sizeof(message_label));
-		printf("RESPONSE: %d\n",response);
+
 		if (response < 0)
 			break;
+		
 		usleep(50000);
 		if (response == sizeof(message_label))
 		{
