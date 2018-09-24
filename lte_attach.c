@@ -138,21 +138,6 @@ void rrc_connection_setup()
 	printf("RRC Connection succeded.\n");
 }
 
-void receive_backup_server_info()
-{
-	message_label new_enode_b_label;
-
-	recive_data_blocking(client_socket, (void *)&backup_server_info,
-						 (void *)&new_enode_b_label);
-	char backup_server_ip[4];
-	strncpy(backup_server_ip, backup_server_info.address, 4);
-
-	printf("Backup server: %d.%d.%d.%d:%d\n", backup_server_ip[0],
-		   backup_server_ip[1], backup_server_ip[2], backup_server_ip[3],
-		   backup_server_info.eNodeB_port);
-	printf("---\n");
-}
-
 DRX_Config create_drx_config()
 {
 	DRX_Config drx_config;
@@ -189,6 +174,5 @@ void lte_attach()
 	perform_random_access_procedure();
 	rrc_connection_setup();
 	drx_config_setup();
-	receive_backup_server_info();
 	printf("\n");
 }

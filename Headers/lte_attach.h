@@ -18,8 +18,6 @@ RRC_Connection_Setup_Complete create_rrc_c_setup_complete();
 
 void rrc_connection_setup();
 
-void receive_backup_server_info();
-
 DRX_Config create_drx_config();
 
 void drx_config_setup();

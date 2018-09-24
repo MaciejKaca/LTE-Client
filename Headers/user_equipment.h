@@ -2,6 +2,7 @@
 
 #include "battery.h"
 #include "common.h"
+#include "handover.h"
 
 typedef struct UserEquipment
 {
@@ -15,6 +16,7 @@ typedef struct UserEquipment
 	bool is_requesting_download;
 	void (*power_off_on_trigger)();
 	Battery battery;
+	X2_Server_Info backup_server_info;
 } UserEquipment;
 
 void create_user_equipment_imsi();

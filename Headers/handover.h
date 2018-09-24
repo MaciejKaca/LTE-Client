@@ -1,3 +1,5 @@
+#pragma once
+
 #include "common.h"
 
 #define ADDRESS_LENGTH 4

@@ -10,9 +10,11 @@ void server_listen_respond();
 
 void server_send_requests();
 
+void resolve_backup_server_info();
+
 void resolve_handover_control();
 
-void resolve_handover_response();
+void resolve_handover_start();
 
 void download_file();
 
