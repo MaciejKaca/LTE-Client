@@ -14,6 +14,10 @@ typedef struct X2_Server_Info {
     byte address[ADDRESS_LENGTH];
 }X2_Server_Info;
 
+void reconnect_to_backup_server();
+
+void handle_connection_lost();
+
 void resolve_backup_server_info();
 
 void resolve_handover_control();

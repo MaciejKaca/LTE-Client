@@ -31,9 +31,9 @@ void resolve_handover_control()
 			  measurment_report_label);
 }
 
-void resolve_handover_start()
+void reconnect_to_backup_server()
 {
-    //closing old connection
+	//closing old connection
     close(client_socket);
 
     //connecting to new server
@@ -44,6 +44,11 @@ void resolve_handover_start()
 
 	create_session(backup_server_address_string,
                    backup_server_info.eNodeB_port);
+}
+
+void resolve_handover_start()
+{
+    reconnect_to_backup_server();
 
     //connection authorization
     message_label handover_reconnection_label = {
@@ -61,4 +66,12 @@ void resolve_handover_start()
 	
 	set_socket_non_blocking(client_socket);
     user_equipment.signal_strength = 100;
+}
+
+void handle_connection_lost()
+{
+	printf("Connection lost, connecting to new server\n");
+	reconnect_to_backup_server();
+	lte_attach();
+	set_socket_non_blocking(client_socket);
 }

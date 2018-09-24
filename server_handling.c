@@ -54,9 +54,12 @@ void server_listen_respond()
 	{
 		int response =
 			read(client_socket, (void *)&label, sizeof(message_label));
-
+		
 		if (response < 0)
 			break;
+
+		if (response == 0)
+			handle_connection_lost();
 		
 		usleep(50000);
 		if (response == sizeof(message_label))
