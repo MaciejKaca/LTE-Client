@@ -11,6 +11,7 @@
 extern UserEquipment user_equipment;
 extern threadpool thread_pool;
 extern int client_socket;
+extern bool test_mode;
 
 void INThandler(int sig)
 {
@@ -54,6 +55,10 @@ UserEquipment create_user_equipment()
 	create_user_equipment_plmn();
 	create_user_equipment_imsi();
 	user_equipment.is_sleeping = false;
+	user_equipment.signal_strength = 100;
+
+	if (test_mode == true)
+		user_equipment.is_requesting_download = true;
 
 	create_battery();
 }

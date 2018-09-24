@@ -10,7 +10,9 @@ typedef struct UserEquipment
 	char msin[10]; // Mobile Subscriber Identification Number
 	char imsi[16]; // International Mobile Subscriber Identity
 	char plmn[8];
+	int signal_strength;
 	bool is_sleeping;
+	bool is_requesting_download;
 	void (*power_off_on_trigger)();
 	Battery battery;
 } UserEquipment;

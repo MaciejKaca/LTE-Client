@@ -1,6 +1,7 @@
 #include "Headers/lte_attach.h"
 #include "Headers/connection.h"
 #include "Headers/drx_config.h"
+#include "Headers/handover.h"
 #include "Headers/preambles.h"
 #include "Headers/rrc_connection.h"
 #include "Headers/user_equipment.h"
@@ -14,6 +15,7 @@ extern UserEquipment user_equipment;
 extern threadpool thread_pool;
 
 int C_RNTI;
+X2_Server_Info backup_server_info;
 
 RandomAccessPreamble create_input_preamble()
 {
