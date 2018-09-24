@@ -20,8 +20,6 @@ void request_file_download()
 			  file_download_request_label);
 
 	user_equipment.is_requesting_download = false;
-
-	FILE *file = fopen(download_info.filename, "w");
 }
 
 void resolve_download_info()
@@ -35,6 +33,9 @@ void resolve_download_info()
 	printf("Download ID: %d\n", download_info.error_number);
 	printf("Number of packets: %d\n", download_info.number_of_packets);
 	printf("------------------------------------------\n");
+
+	FILE *file = fopen(download_info.filename, "w");
+	fclose(file);
 }
 
 void resolve_packet()
@@ -51,4 +52,5 @@ void resolve_packet()
 	FILE *file = fopen(download_info.filename, "a");
 	fprintf(file, "%.*s", packet.data_size, packet.data);
 	fflush(file);
+	fclose(file);
 }
