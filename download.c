@@ -20,6 +20,7 @@ void request_file_download()
 			  file_download_request_label);
 
 	user_equipment.is_requesting_download = false;
+
 	FILE *file = fopen(download_info.filename, "w");
 }
 
