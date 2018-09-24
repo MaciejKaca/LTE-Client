@@ -36,6 +36,13 @@ void reconnect_to_backup_server()
 	//closing old connection
     close(client_socket);
 
+	//check if backup server exists
+	if(backup_server_info.eNodeB_port == 0)
+	{
+		printf("No servers left, exiting...");
+		exit(0);
+	}
+
     //connecting to new server
     char backup_server_address_string[17];
 	sprintf(backup_server_address_string, "%d.%d.%d.%d",
