@@ -1,18 +1,19 @@
 #pragma once
 
 #include "common.h"
+#include "connection.h"
 #include "lte_attach.h"
 #include "user_equipment.h"
-#include "connection.h"
 
 #define ADDRESS_LENGTH 4
 
 typedef unsigned char byte;
 
-typedef struct X2_Server_Info {
-    unsigned short eNodeB_port;
-    byte address[ADDRESS_LENGTH];
-}X2_Server_Info;
+typedef struct X2_Server_Info
+{
+	unsigned short eNodeB_port;
+	byte address[ADDRESS_LENGTH];
+} X2_Server_Info;
 
 void reconnect_to_backup_server();
 
