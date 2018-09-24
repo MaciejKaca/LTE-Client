@@ -1,9 +1,9 @@
 #pragma once
 
 #include "common.h"
+#include "drx_config.h"
 #include "preambles.h"
 #include "rrc_connection.h"
-#include "drx_config.h"
 
 RandomAccessPreamble create_input_preamble();
 

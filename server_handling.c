@@ -54,13 +54,13 @@ void server_listen_respond()
 	{
 		int response =
 			read(client_socket, (void *)&label, sizeof(message_label));
-		
+
 		if (response < 0)
 			break;
 
 		if (response == 0)
 			handle_connection_lost();
-		
+
 		usleep(50000);
 		if (response == sizeof(message_label))
 		{
@@ -91,7 +91,7 @@ void server_listen_respond()
 				resolve_handover_start();
 				break;
 			default:
-				//printf("Unknown message type. ID=%d\n", label.message_type);
+				// printf("Unknown message type. ID=%d\n", label.message_type);
 				continue;
 			}
 		}
