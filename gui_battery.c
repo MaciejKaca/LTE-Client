@@ -4,7 +4,7 @@
 extern GUI_Battery gui_battery;
 extern UserEquipment user_equipment;
 
-void draw_on_screen(char screen[23][80])
+void draw_battery_on_screen(char screen[23][80])
 {
 	int x = gui_battery.x_position;
 	char battery_text[80];
@@ -18,5 +18,5 @@ GUI_Battery initialize_gui_battery()
 	gui_battery.is_enabled = true;
 	gui_battery.x_position = 66;
 	gui_battery.y_position = 0;
-	gui_battery.draw_on_screen = draw_on_screen;
+	gui_battery.draw_on_screen = draw_battery_on_screen;
 }

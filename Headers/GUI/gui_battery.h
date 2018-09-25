@@ -13,3 +13,5 @@ typedef struct GUI_Battery
 
 
 GUI_Battery initialize_gui_battery();
+
+void draw_battery_on_screen(char screen[23][80]);

@@ -4,7 +4,7 @@ extern GUI_ProgressBar gui_progress_bar;
 extern Download_Info download_info;
 extern int current_packet_number;
 
-void draw_on_screen(char screen[23][80])
+void draw_progress_bar_on_screen(char screen[23][80])
 {
     int x = gui_progress_bar.x_position;
     char progress_bar_text[80];
@@ -20,5 +20,5 @@ GUI_ProgressBar initialize_gui_progress_bar()
     gui_progress_bar.is_enabled = false;
 	gui_progress_bar.x_position = 67;
 	gui_progress_bar.y_position = 0;
-	gui_progress_bar.draw_on_screen = draw_on_screen;
+	gui_progress_bar.draw_on_screen = draw_progress_bar_on_screen;
 }
