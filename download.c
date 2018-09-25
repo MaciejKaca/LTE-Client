@@ -41,10 +41,6 @@ void resolve_packet()
 
 	current_packet_number = packet.packet_number;
 
-	printf("Received packet %d/%d\n", ++packet.packet_number,
-		   download_info.number_of_packets);
-	printf("Data: %.*s\n", packet.data_size, packet.data);
-
 	FILE *file = fopen(download_info.filename, "a");
 	fprintf(file, "%.*s", packet.data_size, packet.data);
 	fflush(file);

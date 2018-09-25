@@ -14,11 +14,11 @@ void detect_button()
 		pressed_key = getchar();
 		switch (pressed_key)
 		{
-		case 112: //F1
-			user_equipment.is_requesting_download = true;	
+		case 'd':
+			user_equipment.is_requesting_download = true;
 			gui_progress_bar.is_enabled = true;
 			break;
-		case 113: //F2
+		case 113: // F2
 			user_equipment.signal_strength = 23;
 			break;
 		default:
@@ -26,5 +26,5 @@ void detect_button()
 		}
 		system("/bin/stty -cbreak");
 	} while (true);
-
+	printf("Keyboard stodofdf\n");
 }

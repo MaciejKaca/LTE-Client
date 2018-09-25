@@ -39,6 +39,7 @@ void draw_gui()
 	char screen[23][80];
 	create_screen(screen);
 	initialize_gui_battery();
+	initialize_gui_progress_bar();
 
 	while (true)
 	{

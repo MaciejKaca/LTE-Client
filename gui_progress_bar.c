@@ -12,13 +12,13 @@ void draw_progress_bar_on_screen(char screen[23][80])
     sprintf(progress_bar_text, "Received %d/%d packets.", 
         current_packet_number, download_info.number_of_packets);
 
-    place_string_on_screen(screen[21], x, progress_bar_text, 78);
+    place_string_on_screen(screen[21], x, progress_bar_text, 40);
 }
 
 GUI_ProgressBar initialize_gui_progress_bar()
 {
     gui_progress_bar.is_enabled = false;
-	gui_progress_bar.x_position = 67;
+	gui_progress_bar.x_position = 1;
 	gui_progress_bar.y_position = 0;
 	gui_progress_bar.draw_on_screen = draw_progress_bar_on_screen;
 }
