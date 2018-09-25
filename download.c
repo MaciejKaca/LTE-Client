@@ -1,9 +1,11 @@
 #include "Headers/download.h"
 
 extern int client_socket;
-extern UserEquipment user_equipment;
 extern int C_RNTI;
+extern UserEquipment user_equipment;
+extern GUI_ProgressBar gui_progress_bar;
 Download_Info download_info;
+int current_packet_number;
 
 void request_file_download()
 {
@@ -45,6 +47,8 @@ void resolve_packet()
 
 	read(client_socket, (void *)&packet, sizeof(packet));
 
+	current_packet_number = packet.packet_number;
+
 	printf("Received packet %d/%d\n", ++packet.packet_number,
 		   download_info.number_of_packets);
 	printf("Data: %.*s\n", packet.data_size, packet.data);
@@ -53,4 +57,7 @@ void resolve_packet()
 	fprintf(file, "%.*s", packet.data_size, packet.data);
 	fflush(file);
 	fclose(file);
+
+	if(packet.packet_number == download_info.number_of_packets - 1)
+		gui_progress_bar.is_enabled = false;
 }

@@ -4,6 +4,7 @@
 #include "connection.h"
 #include "server_handling.h"
 #include "user_equipment.h"
+#include "GUI/gui_progress_bar.h"
 
 #define ERR_DOWNLOAD_NO_ERRORS 0
 #define ERR_DOWNLOAD_FILE_NOT_FOUND -1

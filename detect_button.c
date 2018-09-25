@@ -3,6 +3,8 @@ extern UserEquipment user_equipment;
 extern bool handover_response;
 extern int client_socket;
 
+extern GUI_ProgressBar gui_progress_bar;
+
 void detect_button()
 {
 	int pressed_key;
@@ -13,7 +15,8 @@ void detect_button()
 		switch (pressed_key)
 		{
 		case 112: //F1
-			user_equipment.is_requesting_download = true;
+			user_equipment.is_requesting_download = true;	
+			gui_progress_bar.is_enabled = true;
 			break;
 		case 113: //F2
 			user_equipment.signal_strength = 23;

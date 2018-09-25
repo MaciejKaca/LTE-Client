@@ -1,9 +1,11 @@
 #include "Headers/GUI/gui.h"
 #include "Headers/GUI/gui_battery.h"
+#include "Headers/GUI/gui_progress_bar.h"
 
 char screen[23][80];
 
 GUI_Battery gui_battery;
+GUI_ProgressBar gui_progress_bar;
 
 void create_screen()
 {
@@ -30,6 +32,8 @@ void draw_gui()
 		clear();
 		draw_screen();
 		gui_battery.draw_on_screen(screen);
+		if(gui_progress_bar.is_enabled == true)
+			gui_progress_bar.draw_on_screen(screen);
 		sleep(1);
 	}
 }
