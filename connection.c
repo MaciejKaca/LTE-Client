@@ -91,7 +91,6 @@ int recive_data_blocking(int socket, void *data, message_label *label)
 				return read_data_blocking(socket, data, label->message_length);
 				break;
 			default:
-				printf("Unknown message type. ID=%d\n", label->message_type);
 				continue;
 				break;
 			}

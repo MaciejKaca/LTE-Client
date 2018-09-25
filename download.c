@@ -9,7 +9,6 @@ int current_packet_number;
 
 void request_file_download()
 {
-	print_sent_data_type("msg_download_request");
 	Download_Request file_download_request = {
 		filename : "file.txt",
 		client_C_RNTI : C_RNTI
@@ -28,13 +27,6 @@ void resolve_download_info()
 {
 	memset(&download_info, 0, sizeof(Download_Info));
 	read(client_socket, (void *)&download_info, sizeof(download_info));
-
-	printf("------------------------------------------\n");
-	printf("DOWNLOAD INFO\n");
-	printf("Filename: %s\n", download_info.filename);
-	printf("Download ID: %d\n", download_info.error_number);
-	printf("Number of packets: %d\n", download_info.number_of_packets);
-	printf("------------------------------------------\n");
 
 	FILE *file = fopen(download_info.filename, "w");
 	fclose(file);

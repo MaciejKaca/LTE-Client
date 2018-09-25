@@ -27,5 +27,4 @@ void detect_button()
 		system("/bin/stty -cbreak");
 	} while (true);
 
-	printf("Keyboard stodofdf\n");
 }
