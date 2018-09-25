@@ -20,7 +20,6 @@ void battery_drain()
 		if (!user_equipment.is_sleeping)
 		{
 			user_equipment.battery.charge -= 1;
-			printf("Battery: %d%%\n", user_equipment.battery.charge);
 			int time_before_battery_loss = (rand() % 600000) + 30000;
 			usleep(time_before_battery_loss);
 		}
@@ -38,7 +37,6 @@ void battery_drain()
 					  battery_critical_label);
 		}
 	}
-	printf("Battery drained. I hope you're proud of yourself.\n");
 	exit(0);
 }
 

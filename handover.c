@@ -11,10 +11,6 @@ void resolve_backup_server_info()
 		 sizeof(backup_server_info));
 	char backup_server_ip[4];
 	strncpy(backup_server_ip, backup_server_info.address, 4);
-
-	printf("Backup server received: %d.%d.%d.%d:%d\n", backup_server_ip[0],
-		   backup_server_ip[1], backup_server_ip[2], backup_server_ip[3],
-		   backup_server_info.eNodeB_port);
 }
 
 void resolve_handover_control()
@@ -39,7 +35,6 @@ void reconnect_to_backup_server()
 	// check if backup server exists
 	if (backup_server_info.eNodeB_port == 0)
 	{
-		printf("No servers left, exiting...");
 		exit(0);
 	}
 
@@ -69,7 +64,6 @@ void resolve_handover_start()
 	recive_data_blocking(client_socket, (void *)&new_C_RNTI,
 						 &handover_reconnection_info_label);
 
-	printf("New C_RNTI:%d\n", new_C_RNTI);
 	C_RNTI = new_C_RNTI;
 
 	set_socket_non_blocking(client_socket);
@@ -78,7 +72,6 @@ void resolve_handover_start()
 
 void handle_connection_lost()
 {
-	printf("Connection lost, connecting to new server\n");
 	reconnect_to_backup_server();
 	lte_attach();
 	set_socket_non_blocking(client_socket);
