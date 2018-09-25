@@ -7,13 +7,19 @@ void create_screen(char screen[23][80])
 {
 	for (int y = 0; y < 23; y++)
 		for (int x = 0; x < 80; x++)
-		{
 			screen[y][x] = ' ';
-			if (x == 0 || x == 79)
-				screen[y][x] = '|';
-			if (y == 0 || y == 22)
-				screen[y][x] = '-';
-		}
+
+	for (int y = 1; y < 22; y++)
+	{
+		screen[y][0] = '|';
+		screen[y][79] = '|';
+	}
+
+	for (int x = 1; x < 79; x++)
+	{
+		screen[0][x] = '=';
+		screen[22][x] = '=';
+	}
 }
 
 void draw_screen(char screen[23][80])
@@ -37,6 +43,6 @@ void draw_gui()
 		clear();
 		draw_screen(screen);
 		gui_battery.draw_on_screen(screen);
-		sleep(1);
+		usleep(100000);
 	}
 }
