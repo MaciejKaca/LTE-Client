@@ -1,6 +1,7 @@
 #include "Headers/threading.h"
+#include "Headers/GUI/gui.h"
 
-#define THREADS_NUM 3
+#define THREADS_NUM 4
 
 extern UserEquipment user_equipment;
 extern bool test_mode;
@@ -15,6 +16,7 @@ void create_thread_pool()
 	user_equipment.power_off_on_trigger();
 	thpool_add_work(thread_pool, (void *)server_handle_IO, NULL);
 	thpool_add_work(thread_pool, user_equipment.battery.battery_drain, NULL);
+	thpool_add_work(thread_pool, draw_gui, NULL);
 
 	if (test_mode == false)
 		thpool_add_work(thread_pool, detect_button, NULL);

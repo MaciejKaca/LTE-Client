@@ -12,16 +12,14 @@ void detect_button()
 		pressed_key = getchar();
 		switch (pressed_key)
 		{
-		case 'd':
+		case 112: //F1
 			user_equipment.is_requesting_download = true;
 			break;
-		case 'h':
+		case 113: //F2
 			user_equipment.signal_strength = 23;
 			break;
 		default:
-			printf("------------------------\n");
-			printf("Undefinied button\n");
-			printf("------------------------\n");
+			break;
 		}
 		system("/bin/stty -cbreak");
 	} while (true);
