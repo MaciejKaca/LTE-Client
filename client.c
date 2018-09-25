@@ -19,7 +19,6 @@ int main(int argc, char *argv[])
 		error("Not enough arguments passed!");
 	else if (argc == 4)
 	{
-		printf("Started programm in test mode\n");
 		test_mode = argv[3];
 	}
 
