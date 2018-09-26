@@ -39,13 +39,10 @@ void resolve_packet()
 
 	read(client_socket, (void *)&packet, sizeof(packet));
 
-	current_packet_number = packet.packet_number;
+	current_packet_number = packet.packet_number + 1;
 
 	FILE *file = fopen(download_info.filename, "a");
 	fprintf(file, "%.*s", packet.data_size, packet.data);
 	fflush(file);
 	fclose(file);
-
-	if(packet.packet_number == download_info.number_of_packets - 1)
-		gui_progress_bar.is_enabled = false;
 }

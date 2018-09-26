@@ -4,6 +4,7 @@
 
 #include "../download.h"
 #include "gui_helper.h"
+#include "math.h"
 
 typedef struct GUI_ProgressBar
 {
@@ -16,4 +17,6 @@ typedef struct GUI_ProgressBar
 GUI_ProgressBar initialize_gui_progress_bar();
 
 void draw_progress_bar_on_screen(char screen[23][80]);
+
+void create_progress_bar_text();
 

@@ -8,7 +8,7 @@ OBJECTS = $(SOURCES:.c=.o)
 EXEC = lte_client
 
 $(EXEC): $(OBJECTS)
-	$(CC) -pthread $(OBJECTS) -o $(EXEC)
+	$(CC) -pthread $(OBJECTS) -lm -o $(EXEC)
 	rm -f *.o *~
 
 %.o: %.c
