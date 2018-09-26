@@ -21,7 +21,7 @@ void draw_progress_bar_on_screen(char screen[23][80])
     place_string_on_screen(screen[21], x, progress_bar_text, 78);
 
     if(current_packet_number == download_info.number_of_packets - 1)
-        gui_progress_bar.is_enabled == false;
+        gui_progress_bar.is_enabled = false;
 }
 
 GUI_ProgressBar initialize_gui_progress_bar()
@@ -38,7 +38,7 @@ void create_progress_bar_text(char* str, int size)
     str[size - 1] = ']';
 
     int number_of_packets = download_info.number_of_packets;
-    int number_of_signs = floor((current_packet_number / (float)number_of_packets) * 78);
+    int number_of_signs = floor((current_packet_number / (float)number_of_packets) * 78) ;
 
     if(number_of_signs >= 1)
     {
