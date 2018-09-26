@@ -44,10 +44,13 @@ void draw_gui()
 	while (true)
 	{
 		clear();
-		draw_screen(screen);
+		create_screen(screen);
+		
 		gui_battery.draw_on_screen(screen);
-		if(gui_progress_bar.is_enabled == true)
+		if (gui_progress_bar.is_enabled == true)
 			gui_progress_bar.draw_on_screen(screen);
+
+		draw_screen(screen);		
 		usleep(100000);
 	}
 }
