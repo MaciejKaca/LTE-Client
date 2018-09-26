@@ -9,10 +9,10 @@ void draw_progress_bar_on_screen(char screen[23][80])
  
     int x = gui_progress_bar.x_position;
     char progress_bar_status_text[80];
-    sprintf(progress_bar_status_text, "Received %d/%d packets.", 
-        current_packet_number, download_info.number_of_packets);
+    sprintf(progress_bar_status_text, "Filename: %s | Received %d/%d packets.", 
+        download_info.filename, current_packet_number, download_info.number_of_packets);
 
-    place_string_on_screen(screen[20], x, progress_bar_status_text, 40);
+    place_string_on_screen(screen[20], x, progress_bar_status_text, 78);
 
     char progress_bar_text[78];
     memset(progress_bar_text, ' ', sizeof(progress_bar_text));
