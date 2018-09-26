@@ -3,15 +3,15 @@ extern UserEquipment user_equipment;
 extern bool handover_response;
 extern int client_socket;
 extern GUI_ProgressBar gui_progress_bar;
-
 extern char requested_file_name[50];
 
+char key_stack[50];
+
 void detect_button()
-{
-	char key_stack[50];
+{	
 	int key_stack_iter = 0;
 	bool is_user_typing_filename = false;
-
+	
 	int pressed_key;
 	do
 	{
@@ -19,7 +19,7 @@ void detect_button()
 		
 		pressed_key = getchar();
 
-		if(is_user_typing_filename == true && pressed_key != 10)
+		if(is_user_typing_filename == true && pressed_key != 10 && pressed_key != 127)
 		{
 			key_stack[key_stack_iter] = pressed_key;
 			key_stack_iter++;
@@ -43,12 +43,19 @@ void detect_button()
 				gui_progress_bar.is_enabled = true;
 				is_user_typing_filename = false;
 				key_stack_iter = 0;
+				memset(&key_stack, 0, sizeof(key_stack));
 			}
 			break;	
+		case 127:
+			if(is_user_typing_filename == true)
+			{
+				key_stack_iter--;
+				key_stack[key_stack_iter] = '\0';
+			}
+			break;
 		default:
 			break;
 		}
-
 		system("/bin/stty -cbreak");
 	} while (true);
 	printf("Keyboard stodofdf\n");
