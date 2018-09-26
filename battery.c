@@ -21,7 +21,7 @@ void battery_drain()
 		if (!user_equipment.is_sleeping)
 		{
 			user_equipment.battery.charge -= 1;
-			int time_before_battery_loss = (rand() % 600000) + 30000;
+			int time_before_battery_loss = (rand() % 1000000) + 90000;
 			usleep(time_before_battery_loss);
 		}
 		if (is_battery_critical() == true && battery_critical_sended == false)
@@ -39,6 +39,7 @@ void battery_drain()
 		}
 	}
 	add_log_entry("Battery drained. Shutting down.");
+	sleep(1);
 	exit(0);
 }
 

@@ -13,12 +13,16 @@ void resolve_backup_server_info()
 	char backup_server_ip[4];
 	strncpy(backup_server_ip, backup_server_info.address, 4);
 
-	//char backup_server_address_string[40];
-	//sprintf(backup_server_address_string, "%d.%d.%d.%d:%d",
-	//		backup_server_info.address[0], backup_server_info.address[1],
-	//		backup_server_info.address[2], backup_server_info.address[3],
-	//		backup_server_info.eNodeB_port);
-	//add_log_entry(backup_server_address_string);
+	char backup_server_address_string[50];
+	sprintf(backup_server_address_string, "Backup server: %d.%d.%d.%d:%d",
+			backup_server_info.address[0], backup_server_info.address[1],
+			backup_server_info.address[2], backup_server_info.address[3],
+			backup_server_info.eNodeB_port);
+
+	if (backup_server_info.eNodeB_port == 0)
+		sprintf(backup_server_address_string, "No backup server! Good luck.");
+		
+	add_log_entry(backup_server_address_string);
 }
 
 void resolve_handover_control()
