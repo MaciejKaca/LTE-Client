@@ -3,14 +3,14 @@
 extern GUI_ProgressBar gui_progress_bar;
 extern Download_Info download_info;
 extern int current_packet_number;
+extern char requested_file_name[50];
 
 void draw_progress_bar_on_screen(char screen[23][80])
 {
- 
     int x = gui_progress_bar.x_position;
     char progress_bar_status_text[80];
     sprintf(progress_bar_status_text, "Filename: %s | Received %d/%d packets.", 
-        download_info.filename, current_packet_number, download_info.number_of_packets);
+        requested_file_name, current_packet_number, download_info.number_of_packets);
 
     place_string_on_screen(screen[20], x, progress_bar_status_text, 78);
 
@@ -20,8 +20,12 @@ void draw_progress_bar_on_screen(char screen[23][80])
 
     place_string_on_screen(screen[21], x, progress_bar_text, 78);
 
-    if(current_packet_number == download_info.number_of_packets - 1)
+    if(current_packet_number == download_info.number_of_packets && download_info.number_of_packets != 0)
+    {
         gui_progress_bar.is_enabled = false;
+        download_info.number_of_packets = 0;
+        current_packet_number = 0;
+    }
 }
 
 GUI_ProgressBar initialize_gui_progress_bar()
