@@ -14,3 +14,4 @@ valgrind-out.txt
 find.sh
 .valgrind-out.txt.swp
 file.txt
+file.text

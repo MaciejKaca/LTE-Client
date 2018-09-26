@@ -1,4 +1,5 @@
 #include "Headers/handover.h"
+#include "Headers/GUI/gui_logs.h"
 
 extern int client_socket;
 extern UserEquipment user_equipment;
@@ -11,6 +12,13 @@ void resolve_backup_server_info()
 		 sizeof(backup_server_info));
 	char backup_server_ip[4];
 	strncpy(backup_server_ip, backup_server_info.address, 4);
+
+	//char backup_server_address_string[40];
+	//sprintf(backup_server_address_string, "%d.%d.%d.%d:%d",
+	//		backup_server_info.address[0], backup_server_info.address[1],
+	//		backup_server_info.address[2], backup_server_info.address[3],
+	//		backup_server_info.eNodeB_port);
+	//add_log_entry(backup_server_address_string);
 }
 
 void resolve_handover_control()
@@ -72,7 +80,9 @@ void resolve_handover_start()
 
 void handle_connection_lost()
 {
+	add_log_entry("Connection lost. Reconnecting.");
 	reconnect_to_backup_server();
 	lte_attach();
 	set_socket_non_blocking(client_socket);
+	add_log_entry("Reconnected succesfully");
 }

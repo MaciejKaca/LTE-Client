@@ -3,6 +3,7 @@
 #include "Headers/connection.h"
 #include "Headers/message_label.h"
 #include "Headers/user_equipment.h"
+#include "Headers/GUI/gui_logs.h"
 #include <pthread.h>
 
 extern UserEquipment user_equipment;
@@ -37,6 +38,7 @@ void battery_drain()
 					  battery_critical_label);
 		}
 	}
+	add_log_entry("Battery drained. Shutting down.");
 	exit(0);
 }
 

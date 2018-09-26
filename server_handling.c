@@ -1,4 +1,5 @@
 #include "Headers/server_handling.h"
+#include "Headers/GUI/gui_logs.h"
 #include "Headers/connection.h"
 #include "Headers/download.h"
 #include "Headers/handover.h"
@@ -54,6 +55,7 @@ void server_listen_respond()
 				resolve_ping();
 				break;
 			case msg_download_info:
+				add_log_entry("File download started.");
 				resolve_download_info();
 				break;
 			case msg_download_packet:
@@ -66,6 +68,7 @@ void server_listen_respond()
 				resolve_handover_control();
 				break;
 			case msg_handover_start:
+				add_log_entry("X2 handover started.");
 				resolve_handover_start();
 				break;
 			default:
@@ -89,8 +92,7 @@ void server_handle_IO()
 		server_send_requests();
 
 		user_equipment.is_sleeping = true;
-		sleep(4);
-		usleep(100000);
+		sleep(3);
 		user_equipment.is_sleeping = false;
 		sleep(1);
 	}

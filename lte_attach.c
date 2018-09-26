@@ -5,6 +5,8 @@
 #include "Headers/preambles.h"
 #include "Headers/rrc_connection.h"
 #include "Headers/user_equipment.h"
+#include "Headers/GUI/gui_logs.h"
+
 
 #include <pthread.h>
 
