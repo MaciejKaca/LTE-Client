@@ -10,26 +10,26 @@ extern char requested_file_name[50];
 char key_stack[50];
 
 void detect_button()
-{	
+{
 	memset(&key_stack, 0, sizeof(key_stack));
 	int key_stack_iter = 0;
 	bool is_user_typing_filename = false;
-	
+
 	int pressed_key;
 	do
-	{ 
+	{
 		system("/bin/stty cbreak");
-		
+
 		pressed_key = getchar();
 
-		if(is_user_typing_filename)
+		if (is_user_typing_filename)
 		{
-			switch(pressed_key)
+			switch (pressed_key)
 			{
 			case 10: // enter
-				if(is_user_typing_filename)
+				if (is_user_typing_filename)
 				{
-					key_stack[key_stack_iter+1] = '\0';
+					key_stack[key_stack_iter + 1] = '\0';
 					strcpy(requested_file_name, key_stack);
 					user_equipment.is_requesting_download = true;
 					gui_progress_bar.is_enabled = true;
@@ -37,19 +37,19 @@ void detect_button()
 					key_stack_iter = 0;
 					memset(&key_stack, 0, sizeof(key_stack));
 				}
-			break;	
+				break;
 			case 127: // backspace
-				if(is_user_typing_filename)
+				if (is_user_typing_filename)
 				{
 					key_stack_iter--;
 					key_stack[key_stack_iter] = '\0';
 				}
-			break;
+				break;
 			default:
 				key_stack[key_stack_iter] = pressed_key;
 				key_stack_iter++;
-			break;
-			}	
+				break;
+			}
 		}
 
 		switch (pressed_key)
@@ -57,13 +57,16 @@ void detect_button()
 		case '1':
 			memset(&key_stack, 0, sizeof(key_stack));
 			is_user_typing_filename = true;
+			add_log_entry("Started taking user input for filename.");
 			break;
 		case '2':
 			user_equipment.signal_strength = 23;
+			add_log_entry("Low signal!");
 			break;
 		case '3':
 			user_equipment.is_requesting_file_list = true;
 			gui_available_file_list.is_enabled = true;
+			add_log_entry("Requested available file list.");
 			break;
 		default:
 			break;

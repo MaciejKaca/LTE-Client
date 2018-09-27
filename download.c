@@ -1,4 +1,5 @@
 #include "Headers/download.h"
+#include "Headers/GUI/gui_helper.h"
 
 extern int client_socket;
 extern int C_RNTI;
@@ -33,14 +34,18 @@ void resolve_download_info()
 	memset(&download_info, 0, sizeof(Download_Info));
 	read(client_socket, (void *)&download_info, sizeof(download_info));
 
-	if(download_info.error_number == ERR_DOWNLOAD_FILE_NOT_FOUND)
+	if (download_info.error_number == ERR_DOWNLOAD_FILE_NOT_FOUND)
 	{
 		user_equipment.is_requesting_download = false;
 		gui_progress_bar.is_enabled = false;
+		add_log_entry("File not found on server.");
 	}
-
-	FILE *file = fopen(download_info.filename, "w");
-	fclose(file);
+	else
+	{
+		FILE *file = fopen(download_info.filename, "w");
+		fclose(file);
+		add_log_entry("File download started.");		
+	}
 }
 
 void resolve_packet()
