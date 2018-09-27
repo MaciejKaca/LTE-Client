@@ -1,5 +1,6 @@
 #include "Headers/user_equipment.h"
 #include "Headers/connection.h"
+#include "Headers/GUI/gui_logs.h"
 #include <pthread.h>
 #include <signal.h>
 #include <unistd.h>
@@ -24,6 +25,8 @@ void INThandler(int sig)
 
 	signal(sig, SIG_IGN);
 	send_data(client_socket, (void *)shutdown, shutdown_label);
+	add_log_entry("Goodbye! :)");
+	sleep(1);
 	close(client_socket);
 	exit(0);
 }

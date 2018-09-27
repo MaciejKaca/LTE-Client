@@ -1,16 +1,14 @@
 #include "Headers/GUI/gui.h"
-#include "Headers/GUI/gui_battery.h"
-#include "Headers/GUI/gui_c_rnti.h"
+#include "Headers/GUI/gui_ue_info.h"
 #include "Headers/GUI/gui_logs.h"
 #include "Headers/GUI/gui_menu.h"
 #include "Headers/GUI/gui_key_buffer.h"
 #include "Headers/GUI/gui_progress_bar.h"
 #include "Headers/GUI/gui_available_file_list.h"
 
-GUI_Battery gui_battery;
+GUI_UE_Info gui_ue_info;
 GUI_ProgressBar gui_progress_bar;
 GUI_KeyBuffer gui_key_buffer;
-GUI_C_RNTI gui_c_rnti;
 GUI_Logs gui_logs;
 GUI_Menu gui_menu;
 GUI_AvailableFileList gui_available_file_list;
@@ -48,9 +46,8 @@ void draw_gui()
 {
 	char screen[23][80];
 	create_screen(screen);
-	initialize_gui_battery();
+	initialize_gui_ue_info();
 	initialize_gui_progress_bar();
-	initialize_gui_c_rtni();
 	initialize_gui_logs();
 	initialize_gui_menu();
 	initialize_gui_key_buffer_bar();
@@ -61,8 +58,8 @@ void draw_gui()
 		clear();
 		create_screen(screen);
 
-		gui_battery.draw_on_screen(screen);
-		gui_c_rnti.draw_on_screen(screen);
+		gui_ue_info.draw_on_screen(screen);
+
 
 		if (gui_menu.is_enabled)
 			gui_menu.draw_on_screen(screen);

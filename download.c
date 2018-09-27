@@ -41,7 +41,7 @@ void resolve_download_info()
 	}
 	else
 	{
-		FILE *file = fopen(download_info.filename, "w");
+		FILE *file = fopen(download_info.filename, "wb");
 		fclose(file);
 		add_log_entry("File download started.");		
 	}
@@ -56,7 +56,7 @@ void resolve_packet()
 
 	current_packet_number = packet.packet_number + 1;
 
-	FILE *file = fopen(download_info.filename, "a");
+	FILE *file = fopen(download_info.filename, "ab");
 	fprintf(file, "%.*s", packet.data_size, packet.data);
 	fflush(file);
 	fclose(file);
