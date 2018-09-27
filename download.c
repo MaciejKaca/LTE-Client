@@ -12,12 +12,11 @@ char requested_file_name[50];
 
 void request_file_download()
 {
-	Download_Request file_download_request = {
-		filename : requested_file_name,
-		client_C_RNTI : C_RNTI
-	};
+	Download_Request file_download_request;
+	memset(&file_download_request, 0, sizeof(Download_Request));
 
 	strcpy(file_download_request.filename, requested_file_name);
+	file_download_request.client_C_RNTI = C_RNTI;
 
 	message_label file_download_request_label = {
 		message_type : msg_request_download,

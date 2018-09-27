@@ -6,7 +6,7 @@ extern int client_socket;
 extern GUI_ProgressBar gui_progress_bar;
 extern GUI_AvailableFileList gui_available_file_list;
 extern char requested_file_name[50];
-extern bool is_user_typing_filename = false;
+bool is_user_typing_filename = false;
 char key_stack[50];
 
 void detect_button()
