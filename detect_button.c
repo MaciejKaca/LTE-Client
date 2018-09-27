@@ -17,15 +17,39 @@ void detect_button()
 	
 	int pressed_key;
 	do
-	{
+	{ 
 		system("/bin/stty cbreak");
 		
 		pressed_key = getchar();
 
-		if(is_user_typing_filename == true && pressed_key != 10 && pressed_key != 127)
+		if(is_user_typing_filename)
 		{
-			key_stack[key_stack_iter] = pressed_key;
-			key_stack_iter++;
+			switch(pressed_key)
+			{
+			case 10: // enter
+				if(is_user_typing_filename)
+				{
+					key_stack[key_stack_iter+1] = '\0';
+					strcpy(requested_file_name, key_stack);
+					user_equipment.is_requesting_download = true;
+					gui_progress_bar.is_enabled = true;
+					is_user_typing_filename = false;
+					key_stack_iter = 0;
+					memset(&key_stack, 0, sizeof(key_stack));
+				}
+			break;	
+			case 127: // backspace
+				if(is_user_typing_filename)
+				{
+					key_stack_iter--;
+					key_stack[key_stack_iter] = '\0';
+				}
+			break;
+			default:
+				key_stack[key_stack_iter] = pressed_key;
+				key_stack_iter++;
+			break;
+			}	
 		}
 
 		switch (pressed_key)
@@ -40,25 +64,6 @@ void detect_button()
 		case '3':
 			user_equipment.is_requesting_file_list = true;
 			gui_available_file_list.is_enabled = true;
-			break;
-		case 10:
-			if(is_user_typing_filename == true)
-			{
-				key_stack[key_stack_iter+1] = '\0';
-				strcpy(requested_file_name, key_stack);
-				user_equipment.is_requesting_download = true;
-				gui_progress_bar.is_enabled = true;
-				is_user_typing_filename = false;
-				key_stack_iter = 0;
-				memset(&key_stack, 0, sizeof(key_stack));
-			}
-			break;	
-		case 127:
-			if(is_user_typing_filename == true)
-			{
-				key_stack_iter--;
-				key_stack[key_stack_iter] = '\0';
-			}
 			break;
 		default:
 			break;

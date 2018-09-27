@@ -10,7 +10,7 @@ extern int client_socket;
 extern UserEquipment user_equipment;
 extern threadpool thread_pool;
 extern int C_RNTI;
-char *available_file_list;
+char available_file_list[64];
 
 void resolve_ping()
 {
@@ -33,19 +33,24 @@ void resolve_ping()
 
 void resolve_available_file_list(int data_size)
 {
-	available_file_list = (char *)malloc(data_size);
 	memset(available_file_list, 0, data_size);
 	read(client_socket, available_file_list, data_size);
+
+	for(int i = 0; i < data_size - 1; i++)
+	{
+		if(available_file_list[i] == '\0')
+			available_file_list[i] = ',';
+	}	
 }
 
 void request_available_file_list()
 {
 	message_label label = {
 		message_type : msg_request_available_file_list,
-		message_length: 0
+		message_length: 3
 	};
 
-	write(client_socket, &label, sizeof(message_label));
+	write(client_socket, (void *)&label, sizeof(message_label));
 
 	user_equipment.is_requesting_file_list = false;
 }
@@ -94,6 +99,7 @@ void server_listen_respond()
 			case msg_response_available_file_list:
 				add_log_entry("Received available file list.");
 				resolve_available_file_list(label.message_length);
+				break;
 			default:
 				continue;
 			}
