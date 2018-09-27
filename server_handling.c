@@ -80,7 +80,6 @@ void server_listen_respond()
 				resolve_ping();
 				break;
 			case msg_download_info:
-				add_log_entry("File download started.");
 				resolve_download_info();
 				break;
 			case msg_download_packet:
@@ -117,7 +116,6 @@ void server_send_requests()
 
 	if(user_equipment.is_requesting_file_list == true)
 	{
-		add_log_entry("Requested available file list.");
 		request_available_file_list();
 	}
 }

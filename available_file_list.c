@@ -13,6 +13,9 @@ GUI_AvailableFileList initialize_available_file_list()
 
 void draw_available_file_list_on_screen(char screen[23][80])
 {
-    place_string_on_screen(screen[18], gui_available_file_list.x_position, 
+    char file_text[] = "File list: ";
+    int file_text_length = sizeof(file_text)/sizeof(char);
+    place_string_on_screen(screen[18], 1, file_text, file_text_length);
+    place_string_on_screen(screen[18], gui_available_file_list.x_position+file_text_length,
         available_file_list, 64);
 }
