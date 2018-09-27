@@ -9,9 +9,11 @@ void draw_menu_on_screen(char screen[23][80])
 	int y = gui_menu.y_position;
     char download[] = "1 : Download";
     char handover[] = "2 : Handover";
+    char filelist[] = "3 : File list";
     char shutdown[] = "Ctrl + C : Shutdown";
 	place_string_on_screen(screen[y], x, download, (sizeof(download)/sizeof(char)) );
     place_string_on_screen(screen[++y], x, handover, (sizeof(handover)/sizeof(char)) );
+    place_string_on_screen(screen[++y], x, filelist, (sizeof(filelist)/sizeof(char)) );
     place_string_on_screen(screen[++y], x, shutdown, (sizeof(shutdown)/sizeof(char)) );
 
 }
