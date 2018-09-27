@@ -8,7 +8,10 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 
-extern int client_socket;
+#include "preambles.h"
+#include "rrc_connection.h"
+#include "GUI/gui_logs.h"
+#include "user_equipment.h"
 
 void create_session(char *server_addres, int port);
 

@@ -56,6 +56,11 @@ void reconnect_to_backup_server()
 			backup_server_info.address[0], backup_server_info.address[1],
 			backup_server_info.address[2], backup_server_info.address[3]);
 
+	memset(&user_equipment.eNodeB.ip, 0, sizeof(user_equipment.eNodeB.ip));
+	sprintf(user_equipment.eNodeB.ip, "%d.%d.%d.%d",
+		backup_server_info.address[0], backup_server_info.address[1],
+		backup_server_info.address[2], backup_server_info.address[3]);
+
 	create_session(backup_server_address_string,
 				   backup_server_info.eNodeB_port);
 }

@@ -1,11 +1,12 @@
 #include "Headers/connection.h"
-#include "Headers/preambles.h"
-#include "Headers/rrc_connection.h"
-#include "Headers/GUI/gui_logs.h"
 
+extern UserEquipment user_equipment;
+extern int client_socket;
 
 void create_session(char *server_addres, int port)
 {
+	sprintf(user_equipment.eNodeB.ip, "%s", server_addres);
+	user_equipment.eNodeB.port = port;
 	create_socket();
 	connect_to_server(server_addres, port);
 }

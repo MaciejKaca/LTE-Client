@@ -3,6 +3,12 @@
 #include "battery.h"
 #include "common.h"
 
+typedef struct CurrentlyAttached_eNodeB
+{
+	char ip[128];
+	int port;
+} CurrentlyAttached_eNodeB;
+
 typedef struct UserEquipment
 {
 	char mmc[4];   // Mobile Country Code
@@ -16,6 +22,7 @@ typedef struct UserEquipment
 	bool is_requesting_file_list;
 	void (*power_off_on_trigger)();
 	Battery battery;
+	CurrentlyAttached_eNodeB eNodeB;
 } UserEquipment;
 
 void create_user_equipment_imsi();
