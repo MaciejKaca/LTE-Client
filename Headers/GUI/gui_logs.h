@@ -2,6 +2,7 @@
 
 #include "../common.h"
 #include "../queue.h"
+#include "../queue_ping.h"
 #include "../user_equipment.h"
 #include "gui_helper.h"
 

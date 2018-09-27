@@ -29,6 +29,7 @@ void resolve_ping()
 	};
 
 	send_data(client_socket, (void *)ping_response, ping_response_label);
+	Ping_add_log_entry("PING sent.");
 }
 
 void resolve_available_file_list(int data_size)
@@ -36,18 +37,18 @@ void resolve_available_file_list(int data_size)
 	memset(available_file_list, 0, data_size);
 	read(client_socket, available_file_list, data_size);
 
-	for(int i = 0; i < data_size - 1; i++)
+	for (int i = 0; i < data_size - 1; i++)
 	{
-		if(available_file_list[i] == '\0')
+		if (available_file_list[i] == '\0')
 			available_file_list[i] = ',';
-	}	
+	}
 }
 
 void request_available_file_list()
 {
 	message_label label = {
 		message_type : msg_request_available_file_list,
-		message_length: 3
+		message_length : 3
 	};
 
 	write(client_socket, (void *)&label, sizeof(message_label));
@@ -77,6 +78,7 @@ void server_listen_respond()
 			switch (label.message_type)
 			{
 			case msg_ping_request:
+				Ping_add_log_entry("PING recived.");
 				resolve_ping();
 				break;
 			case msg_download_info:
@@ -114,7 +116,7 @@ void server_send_requests()
 		request_file_download();
 	}
 
-	if(user_equipment.is_requesting_file_list == true)
+	if (user_equipment.is_requesting_file_list == true)
 	{
 		request_available_file_list();
 	}
