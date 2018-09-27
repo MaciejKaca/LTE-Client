@@ -6,14 +6,13 @@ extern int client_socket;
 extern GUI_ProgressBar gui_progress_bar;
 extern GUI_AvailableFileList gui_available_file_list;
 extern char requested_file_name[50];
-
+extern bool is_user_typing_filename = false;
 char key_stack[50];
 
 void detect_button()
 {	
 	memset(&key_stack, 0, sizeof(key_stack));
 	int key_stack_iter = 0;
-	bool is_user_typing_filename = false;
 	
 	int pressed_key;
 	do

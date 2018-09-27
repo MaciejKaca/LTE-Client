@@ -3,7 +3,7 @@
 #include "../common.h"
 
 #include "gui_helper.h"
-
+#include "../detect_button.h"
 typedef struct GUI_KeyBuffer
 {
     bool is_enabled;
