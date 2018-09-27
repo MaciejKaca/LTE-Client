@@ -1,6 +1,8 @@
 #include "Headers/connection.h"
 #include "Headers/preambles.h"
 #include "Headers/rrc_connection.h"
+#include "Headers/GUI/gui_logs.h"
+
 
 void create_session(char *server_addres, int port)
 {

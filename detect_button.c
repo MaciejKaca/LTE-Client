@@ -1,4 +1,5 @@
 #include "Headers/detect_button.h"
+#include "Headers/GUI/gui_logs.h"
 extern UserEquipment user_equipment;
 extern bool handover_response;
 extern int client_socket;
