@@ -13,6 +13,7 @@ typedef struct UserEquipment
 	int signal_strength;
 	bool is_sleeping;
 	bool is_requesting_download;
+	bool is_requesting_file_list;
 	void (*power_off_on_trigger)();
 	Battery battery;
 } UserEquipment;

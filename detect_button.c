@@ -4,12 +4,14 @@ extern UserEquipment user_equipment;
 extern bool handover_response;
 extern int client_socket;
 extern GUI_ProgressBar gui_progress_bar;
+extern GUI_AvailableFileList gui_available_file_list;
 extern char requested_file_name[50];
 
 char key_stack[50];
 
 void detect_button()
 {	
+	memset(&key_stack, 0, sizeof(key_stack));
 	int key_stack_iter = 0;
 	bool is_user_typing_filename = false;
 	
@@ -34,6 +36,10 @@ void detect_button()
 			break;
 		case '2':
 			user_equipment.signal_strength = 23;
+			break;
+		case '3':
+			user_equipment.is_requesting_file_list = true;
+			gui_available_file_list.is_enabled = true;
 			break;
 		case 10:
 			if(is_user_typing_filename == true)

@@ -59,5 +59,7 @@ UserEquipment create_user_equipment()
 	if (test_mode == true)
 		user_equipment.is_requesting_download = true;
 
+	user_equipment.is_requesting_file_list = false;
+
 	create_battery();
 }

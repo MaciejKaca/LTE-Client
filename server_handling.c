@@ -10,6 +10,7 @@ extern int client_socket;
 extern UserEquipment user_equipment;
 extern threadpool thread_pool;
 extern int C_RNTI;
+char *available_file_list;
 
 void resolve_ping()
 {
@@ -28,6 +29,25 @@ void resolve_ping()
 	};
 
 	send_data(client_socket, (void *)ping_response, ping_response_label);
+}
+
+void resolve_available_file_list(int data_size)
+{
+	available_file_list = (char *)malloc(data_size);
+	memset(available_file_list, 0, data_size);
+	read(client_socket, available_file_list, data_size);
+}
+
+void request_available_file_list()
+{
+	message_label label = {
+		message_type : msg_request_available_file_list,
+		message_length: 0
+	};
+
+	write(client_socket, &label, sizeof(message_label));
+
+	user_equipment.is_requesting_file_list = false;
 }
 
 void server_listen_respond()
@@ -71,6 +91,9 @@ void server_listen_respond()
 				add_log_entry("X2 handover started.");
 				resolve_handover_start();
 				break;
+			case msg_response_available_file_list:
+				add_log_entry("Received available file list.");
+				resolve_available_file_list(label.message_length);
 			default:
 				continue;
 			}
@@ -81,7 +104,16 @@ void server_listen_respond()
 void server_send_requests()
 {
 	if (user_equipment.is_requesting_download == true)
+	{
+		add_log_entry("Requested file download.");
 		request_file_download();
+	}
+
+	if(user_equipment.is_requesting_file_list == true)
+	{
+		add_log_entry("Requested available file list.");
+		request_available_file_list();
+	}
 }
 
 void server_handle_IO()
